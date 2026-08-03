@@ -24,3 +24,24 @@ dist-ssr
 *.sw?
 
 .env
+.env.local
+.env.*.local
+.env.development
+.env.production
+
+# Build / cache
+.vite
+*.tsbuildinfo
+coverage
+
+# OS files
+Thumbs.db
+
+# AI assistant files
+CLAUDE.md
+AGENT.md
+AGENTS.md
+.claude/
+.cursor/
+.cursorrules
+.github/copilot-instructions.md
