@@ -1,0 +1,67 @@
+.wrapper {
+    position: relative;
+}
+
+.trigger {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: none;
+    border: none;
+    padding: var(--space-1);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: box-shadow var(--transition-fast);
+}
+
+.trigger:hover,
+.trigger:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-border);
+    outline: none;
+}
+
+.userInfo {
+    text-align: right;
+}
+
+.userName {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+}
+
+.userRole {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.chevron {
+    color: var(--color-text-muted);
+    transition: transform var(--transition-fast);
+}
+
+.chevronOpen {
+    transform: rotate(180deg);
+}
+
+.dropdown {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-3);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: 10;
+}
+
+.dropdownRole {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+}
