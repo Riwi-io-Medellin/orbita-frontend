@@ -1,0 +1,17 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--space-6) var(--space-4);
+    background: var(--color-bg);
+}
+
+.brandWrapper {
+    margin: var(--space-7) 0 var(--space-6);
+}
+
+.cardWrapper {
+    width: 100%;
+    max-width: 420px;
+}
