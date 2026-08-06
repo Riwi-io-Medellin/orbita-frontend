@@ -1,0 +1,59 @@
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: inherit;
+}
+
+.lg {
+    flex-direction: column;
+    text-align: center;
+}
+
+.badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: var(--radius-md);
+    background: var(--gradient-primary);
+    color: var(--color-primary-contrast);
+}
+
+.sm .badge {
+    width: 36px;
+    height: 36px;
+    font-size: var(--font-size-base);
+}
+
+.lg .badge {
+    width: 64px;
+    height: 64px;
+    font-size: var(--font-size-2xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glow-primary);
+}
+
+.name {
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-wide);
+    color: var(--color-text);
+}
+
+.sm .name {
+    font-size: var(--font-size-lg);
+}
+
+.lg .name {
+    font-size: var(--font-size-2xl);
+}
+
+.caption {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}

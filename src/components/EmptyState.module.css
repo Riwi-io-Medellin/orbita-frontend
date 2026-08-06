@@ -1,0 +1,16 @@
+.state {
+    text-align: center;
+    padding: var(--space-8) var(--space-4);
+    color: var(--color-text-muted);
+}
+
+.title {
+    margin: 0;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+}
+
+.description {
+    margin: var(--space-2) 0 0;
+    font-size: var(--font-size-sm);
+}

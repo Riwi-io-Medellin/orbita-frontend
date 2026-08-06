@@ -1,47 +1,61 @@
-# Logs
-logs
-*.log
+# Virtual environment
+.venv/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+
+# Node / JavaScript / Frontend (React, Vite, etc.)
+node_modules/
+dist/
+build/
+.next/
+.nuxt/
+out/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
+# Environment variables & Secrets
 .env
-.env.local
-.env.*.local
-.env.development
-.env.production
+.env.*
+!.env.example
 
-# Build / cache
-.vite
-*.tsbuildinfo
-coverage
+# Databases & Logs
+logs/
+*.log
+*.sqlite
+*.sqlite3
+*.db
 
-# OS files
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*.suo
+
+# OS
+.DS_Store
 Thumbs.db
+ehthumbs.db
 
-# AI assistant files
+# AI Assistants & Context Files (Claude, Cursor, Windsurf, Cline, etc.)
 CLAUDE.md
-AGENT.md
-AGENTS.md
 .claude/
 .cursor/
-.cursorrules
-.github/copilot-instructions.md
+.cursorignore
+.windsurfrules
+.cline/
+cline_docs/
+.continue/
+skills/
+.skills/
+skills-lock.json

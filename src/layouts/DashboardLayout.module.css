@@ -1,0 +1,38 @@
+.page {
+    min-height: 100vh;
+    background: var(--color-bg);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding: var(--space-4) var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.userInfo {
+    text-align: right;
+}
+
+.userName {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+}
+
+.userRole {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.main {
+    padding: var(--space-6);
+}
