@@ -21,3 +21,13 @@ export async function logout() {
     method: "POST",
   });
 }
+
+export async function passwordLogin(email: string, password: string): Promise<void> {
+  const response = await apiFetch("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    throw new Error("Correo o contraseña inválidos.");
+  }
+}

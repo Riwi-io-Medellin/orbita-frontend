@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1920 1080"
+     preserveAspectRatio="xMidYMid slice"
+     role="img"
+     aria-labelledby="title desc">
+  <title id="title">Campo de estrellas animado de Órbita</title>
+  <desc id="desc">Puntos y destellos mínimos aparecen y desaparecen suavemente sobre un fondo transparente.</desc>
+
+  <defs>
+    <filter id="softGlow" x="-250%" y="-250%" width="600%" height="600%">
+      <feGaussianBlur stdDeviation="1.6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <symbol id="dot" overflow="visible">
+      <circle r="1" fill="currentColor"/>
+    </symbol>
+
+    <symbol id="cross" overflow="visible">
+      <path d="M-5 0H5M0-5V5" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+      <circle r="1.15" fill="currentColor"/>
+    </symbol>
+
+    <symbol id="spark" overflow="visible">
+      <path d="M0-7C.8-2.3 2.3-.8 7 0C2.3.8.8 2.3 0 7C-.8 2.3-2.3.8-7 0C-2.3-.8-.8-2.3 0-7Z" fill="currentColor"/>
+    </symbol>
+
+    <style>
+      .field { pointer-events: none; }
+      .still { opacity: .18; }
+      .star {
+        opacity: .05;
+        will-change: opacity, transform;
+        animation-duration: calc(var(--duration) + 5s);
+        animation-delay: var(--delay);
+        animation-iteration-count: infinite;
+        animation-timing-function: cubic-bezier(.45, 0, .55, 1);
+      }
+      .slow { animation-name: slowTwinkle; }
+      .pulse { animation-name: softPulse; }
+      .rare { animation-name: rareFlash; }
+
+      @keyframes slowTwinkle {
+        0%, 12%, 100% { opacity: .04; transform: translate(0, 0); }
+        38% { opacity: .3; transform: translate(1px, -1.2px); }
+        61% { opacity: .1; transform: translate(.2px, -1.8px); }
+        78% { opacity: .2; transform: translate(-.8px, -.5px); }
+      }
+      @keyframes softPulse {
+        0%, 28%, 100% { opacity: .04; transform: translate(0, 0); }
+        52% { opacity: .42; transform: translate(-1.4px, .8px); }
+        67% { opacity: .16; transform: translate(-.5px, 1.6px); }
+      }
+      @keyframes rareFlash {
+        0%, 44%, 67%, 100% { opacity: .025; transform: translate(0, 0); }
+        52% { opacity: .52; transform: translate(1.6px, .6px); }
+        58% { opacity: .12; transform: translate(.9px, 1.3px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .star { animation: none; opacity: .18; transform: none; }
+      }
+    </style>
+  </defs>
+
+  <g class="field">
+    <!-- Polvo estelar estático -->
+    <g class="still" color="#C9C8FF">
+      <use href="#dot" xlink:href="#dot" x="74" y="156"/>
+      <use href="#dot" xlink:href="#dot" x="168" y="486"/>
+      <use href="#dot" xlink:href="#dot" x="246" y="88"/>
+      <use href="#dot" xlink:href="#dot" x="322" y="738"/>
+      <use href="#dot" xlink:href="#dot" x="401" y="274"/>
+      <use href="#dot" xlink:href="#dot" x="476" y="954"/>
+      <use href="#dot" xlink:href="#dot" x="553" y="119"/>
+      <use href="#dot" xlink:href="#dot" x="641" y="628"/>
+      <use href="#dot" xlink:href="#dot" x="718" y="332"/>
+      <use href="#dot" xlink:href="#dot" x="786" y="884"/>
+      <use href="#dot" xlink:href="#dot" x="872" y="173"/>
+      <use href="#dot" xlink:href="#dot" x="948" y="522"/>
+      <use href="#dot" xlink:href="#dot" x="1031" y="1012"/>
+      <use href="#dot" xlink:href="#dot" x="1118" y="263"/>
+      <use href="#dot" xlink:href="#dot" x="1204" y="759"/>
+      <use href="#dot" xlink:href="#dot" x="1277" y="93"/>
+      <use href="#dot" xlink:href="#dot" x="1365" y="446"/>
+      <use href="#dot" xlink:href="#dot" x="1449" y="936"/>
+      <use href="#dot" xlink:href="#dot" x="1521" y="218"/>
+      <use href="#dot" xlink:href="#dot" x="1614" y="671"/>
+      <use href="#dot" xlink:href="#dot" x="1691" y="353"/>
+      <use href="#dot" xlink:href="#dot" x="1778" y="867"/>
+      <use href="#dot" xlink:href="#dot" x="1860" y="128"/>
+      <use href="#dot" xlink:href="#dot" x="1887" y="605"/>
+    </g>
+
+    <!-- Puntos con pulsación muy suave -->
+    <g color="#AEBBFF">
+      <use class="star slow" href="#dot" xlink:href="#dot" x="121" y="842" style="--duration:8.7s;--delay:-3.1s"/>
+      <use class="star pulse" href="#dot" xlink:href="#dot" x="286" y="394" style="--duration:6.4s;--delay:-1.7s"/>
+      <use class="star slow" href="#dot" xlink:href="#dot" x="511" y="571" style="--duration:10.2s;--delay:-7.4s"/>
+      <use class="star rare" href="#dot" xlink:href="#dot" x="694" y="1001" style="--duration:11.3s;--delay:-2.8s"/>
+      <use class="star pulse" href="#dot" xlink:href="#dot" x="902" y="707" style="--duration:7.9s;--delay:-5.6s"/>
+      <use class="star slow" href="#dot" xlink:href="#dot" x="1086" y="78" style="--duration:9.6s;--delay:-4.2s"/>
+      <use class="star rare" href="#dot" xlink:href="#dot" x="1262" y="583" style="--duration:12.1s;--delay:-8.9s"/>
+      <use class="star pulse" href="#dot" xlink:href="#dot" x="1497" y="527" style="--duration:6.9s;--delay:-2.4s"/>
+      <use class="star slow" href="#dot" xlink:href="#dot" x="1743" y="1017" style="--duration:9.1s;--delay:-6.7s"/>
+      <use class="star rare" href="#dot" xlink:href="#dot" x="1829" y="439" style="--duration:10.8s;--delay:-1.2s"/>
+    </g>
+
+    <!-- Cruces orbitales -->
+    <g filter="url(#softGlow)">
+      <use class="star pulse" href="#cross" xlink:href="#cross" x="203" y="226" color="#F7F8FF" style="--duration:7.6s;--delay:-4.8s"/>
+      <use class="star rare" href="#cross" xlink:href="#cross" x="435" y="831" color="#8FA8FF" style="--duration:12.4s;--delay:-7.2s"/>
+      <use class="star slow" href="#cross" xlink:href="#cross" x="678" y="194" color="#C9C8FF" style="--duration:9.7s;--delay:-2.5s"/>
+      <use class="star rare" href="#cross" xlink:href="#cross" x="1012" y="388" color="#58D6FF" style="--duration:11.7s;--delay:-9.1s"/>
+      <use class="star pulse" href="#cross" xlink:href="#cross" x="1179" y="946" color="#F7F8FF" style="--duration:8.2s;--delay:-5.3s"/>
+      <use class="star slow" href="#cross" xlink:href="#cross" x="1398" y="164" color="#A892FF" style="--duration:10.6s;--delay:-3.8s"/>
+      <use class="star rare" href="#cross" xlink:href="#cross" x="1582" y="806" color="#58D6FF" style="--duration:13.1s;--delay:-6.4s"/>
+      <use class="star pulse" href="#cross" xlink:href="#cross" x="1811" y="264" color="#F7F8FF" style="--duration:7.1s;--delay:-1.9s"/>
+    </g>
+
+    <!-- Destellos de cuatro puntas, escasos -->
+    <g filter="url(#softGlow)">
+      <use class="star rare" href="#spark" xlink:href="#spark" x="356" y="137" color="#F7F8FF" style="--duration:13.8s;--delay:-10.2s"/>
+      <use class="star slow" href="#spark" xlink:href="#spark" x="836" y="969" color="#8176FF" style="--duration:11.4s;--delay:-4.6s"/>
+      <use class="star rare" href="#spark" xlink:href="#spark" x="1325" y="674" color="#F7F8FF" style="--duration:14.2s;--delay:-8.1s"/>
+      <use class="star pulse" href="#spark" xlink:href="#spark" x="1667" y="103" color="#58D6FF" style="--duration:9.3s;--delay:-5.7s"/>
+    </g>
+  </g>
+</svg>

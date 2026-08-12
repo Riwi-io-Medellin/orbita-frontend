@@ -1,18 +1,87 @@
 .page {
-    min-height: 100vh;
-    background: var(--color-bg);
+    --color-primary: #958FDD;
+    --color-primary-hover: #837DCC;
+    --color-primary-contrast: #F8F7FF;
+    --color-bg: #F1EFF7;
+    --color-surface: #F7F6FC;
+    --color-border: rgba(109, 104, 186, .28);
+    --color-text: #171A45;
+    --color-text-muted: #5F648D;
+    --shadow-md: 0 12px 32px rgba(65, 59, 128, .12);
+    --shadow-lg: 0 24px 54px rgba(65, 59, 128, .18);
+    position: relative;
+    isolation: isolate;
+    min-height: 100svh;
+    overflow-x: hidden;
+    background: #F1EFF7 url("/orbita-dashboard-background.png") center / cover fixed no-repeat;
+}
+
+:global(html),
+:global(body) {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+:global(body::-webkit-scrollbar) { display: none; }
+
+.page::before {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    background: url("/orbita-starfield-light-animated.svg") center / cover no-repeat;
 }
 
 .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-4);
-    flex-wrap: wrap;
-    padding: var(--space-4) var(--space-6);
-    border-bottom: 1px solid var(--color-border);
+    justify-content: center;
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    padding: 22px 0;
+    position: relative;
+    z-index: 20;
+}
+
+.navigationGroup {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: transform 220ms ease;
 }
 
 .main {
-    padding: var(--space-6);
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+    min-height: min(760px, calc(100svh - 134px));
+    padding: 46px 48px 54px;
+    border: 1px solid rgba(255, 255, 255, .72);
+    border-radius: 30px;
+    background: rgba(247, 246, 252, .72);
+    box-shadow: 0 18px 44px rgba(65, 59, 128, .14);
+    backdrop-filter: blur(10px);
+}
+
+.userBox {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 6px 12px;
+    border: 1px solid rgba(109, 104, 186, .25);
+    border-radius: 18px;
+    background: rgba(247, 246, 252, .72);
+    box-shadow: 0 8px 22px rgba(65, 59, 128, .1);
+    backdrop-filter: blur(10px);
+}
+
+.userBox { padding: 5px; border-radius: 999px; }
+
+@media (max-width: 640px) {
+    .header,
+    .main { width: min(100% - 32px, 1180px); }
+    .header { padding: 16px 0; }
+    .main { min-height: calc(100svh - 152px); padding: 32px 24px 40px; border-radius: 24px; }
+    .navigationGroup { gap: 8px; }
 }

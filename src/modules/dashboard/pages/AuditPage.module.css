@@ -1,0 +1,15 @@
+.page { max-width: 1040px; }
+.hero { margin-bottom: 32px; }
+.eyebrow { margin: 0 0 8px; color: #665FAE; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { margin: 0; color: #171A45; font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.15; }
+.hero p:last-child { margin: 12px 0 0; color: #5F648D; font-size: 1.05rem; }
+.tableWrap { overflow-x: auto; border: 1px solid rgba(109, 104, 186, .28); border-radius: 22px; background: rgba(247, 246, 252, .76); box-shadow: 0 12px 32px rgba(65, 59, 128, .11); backdrop-filter: blur(10px); }
+.table { width: 100%; border-collapse: collapse; color: #30345F; text-align: left; min-width: 700px; }
+.table th { padding: 16px 22px; color: #5F648D; font-size: .76rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-bottom: 1px solid rgba(109, 104, 186, .2); }
+.table td { padding: 17px 22px; font-size: .9rem; border-bottom: 1px solid rgba(109, 104, 186, .13); vertical-align: middle; }
+.table tbody tr:last-child td { border-bottom: 0; }
+.table tbody tr:hover { background: rgba(255, 255, 255, .38); }
+.table strong, .table small { display: block; }
+.table strong { color: #171A45; font-size: .92rem; }
+.table small { margin-top: 3px; color: #6F759B; }
+.event { display: inline-flex; padding: 6px 10px; border-radius: 999px; background: rgba(149, 143, 221, .14); color: #514B9B; font-size: .78rem; font-weight: 700; }

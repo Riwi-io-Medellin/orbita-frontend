@@ -5,11 +5,9 @@
 }
 
 .label {
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
-    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: #30345F;
 }
 
 .inputWrapper {
@@ -23,22 +21,29 @@
     font-family: inherit;
     font-size: var(--font-size-base);
     color: var(--color-text);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    height: 56px;
+    background: #F4F3F8;
+    border: 1px solid #C9CBDF;
+    border-radius: 14px;
+    color: #171A45;
     padding: var(--space-3) var(--space-4);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
 }
 
 .input::placeholder {
-    color: var(--color-text-muted);
+    color: #8589A8;
 }
+
+.input:hover { background: #F8F7FB; border-color: #AEB2D1; }
 
 .input:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--color-focus-ring);
+    background: #F8F7FB;
+    border-color: #7063DC;
+    box-shadow: 0 0 0 3px rgba(112, 99, 220, .14);
 }
+
+.input:-webkit-autofill, .input:-webkit-autofill:hover, .input:-webkit-autofill:focus { -webkit-text-fill-color: #171A45; -webkit-box-shadow: 0 0 0 100px #F8F7FB inset; transition: background-color 9999s ease-out 0s; }
 
 .hasRightSlot {
     padding-right: var(--space-7);
@@ -49,5 +54,5 @@
     right: var(--space-3);
     display: inline-flex;
     align-items: center;
-    color: var(--color-text-muted);
+    color: #5F648D;
 }

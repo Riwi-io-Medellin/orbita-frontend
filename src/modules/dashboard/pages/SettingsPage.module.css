@@ -1,0 +1,10 @@
+.page { max-width: 760px; }
+.hero { margin-bottom: 32px; }
+.eyebrow { margin: 0 0 8px; color: #665FAE; font-size: .82rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.hero h1 { margin: 0; color: #171A45; font-size: clamp(2rem, 4vw, 3.1rem); line-height: 1.15; }
+.hero p:last-child { margin: 12px 0 0; color: #5F648D; font-size: 1.05rem; }
+.card { display: grid; grid-template-columns: auto 1fr 1fr; gap: 24px 32px; align-items: center; padding: 28px; border: 1px solid rgba(109, 104, 186, .28); border-radius: 22px; background: rgba(247, 246, 252, .76); box-shadow: 0 12px 32px rgba(65, 59, 128, .11); backdrop-filter: blur(10px); color: #171A45; }
+.avatar { display: grid; width: 58px; height: 58px; grid-row: span 2; place-items: center; border-radius: 50%; background: #958FDD; color: #F8F7FF; font-size: 1.2rem; font-weight: 700; }
+.label { margin: 0 0 5px; color: #6F759B; font-size: .8rem; }
+.card strong { font-size: .96rem; }
+@media (max-width: 600px) { .card { grid-template-columns: auto 1fr; gap: 18px; } .avatar { grid-row: span 1; } }

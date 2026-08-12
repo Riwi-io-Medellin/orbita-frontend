@@ -1,4 +1,3 @@
-import Spinner from "./Spinner";
 import styles from "./PageLoader.module.css";
 
 interface PageLoaderProps {
@@ -8,7 +7,13 @@ interface PageLoaderProps {
 function PageLoader({ message = "Cargando…" }: PageLoaderProps) {
     return (
         <div className={styles.page}>
-            <Spinner />
+            <img
+                className={styles.logo}
+                src="/orbita-logo-white.svg"
+                alt=""
+                role="status"
+                aria-label="Cargando"
+            />
             <span>{message}</span>
         </div>
     );

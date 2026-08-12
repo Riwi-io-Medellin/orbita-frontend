@@ -1,17 +1,78 @@
 .page {
-    min-height: 100vh;
+    --logo-light: #DAD8FF;
+    --logo-dark: #10143A;
+    --color-surface: #F7F6FC;
+    --color-border: rgba(109, 104, 186, .3);
+    --color-text: #171A45;
+    --color-text-muted: #5F648D;
+    --color-primary: #6A5BE8;
+    --gradient-primary: #6A5BE8;
+    --color-primary-contrast: #F8F7FF;
+    --color-focus-ring: rgba(112, 99, 220, .14);
+    --shadow-glow-primary: 0 10px 22px rgba(102, 88, 221, .22);
+    height: 100svh;
+    min-height: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--space-6) var(--space-4);
-    background: var(--color-bg);
+    justify-content: center;
+    padding: 24px var(--space-4);
+    overflow: hidden;
+    background: #F1EFF7 url("/orbita-login-background.png") center / cover no-repeat;
+    position: relative;
+    isolation: isolate;
+}
+
+.page::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    pointer-events: none;
+    background: url("/orbita-starfield-light-animated.svg") center / cover no-repeat;
 }
 
 .brandWrapper {
-    margin: var(--space-7) 0 var(--space-6);
+    display: grid;
+    justify-items: center;
+    margin: 0 0 22px;
+}
+
+.brandWrapper img {
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    opacity: .94;
+    filter: drop-shadow(0 4px 10px rgba(109, 104, 232, .2));
+    animation: coin-spin 2.35s cubic-bezier(.18,.82,.25,1) both;
+    transform-style: preserve-3d;
+    position: relative;
+    z-index: 1;
 }
 
 .cardWrapper {
     width: 100%;
+    width: min(420px, calc(100vw - 32px));
     max-width: 420px;
+    position: relative;
+    z-index: 1;
 }
+
+.cardWrapper > div { background: rgba(247, 246, 252, .78); border: 1px solid rgba(255, 255, 255, .72); border-radius: 28px; box-shadow: 0 24px 54px rgba(65, 59, 128, .18); backdrop-filter: blur(10px); padding: 28px 32px; }
+
+@keyframes coin-spin {
+    from { transform: perspective(600px) rotateY(0); }
+    82% { transform: perspective(600px) rotateY(720deg); }
+    to { transform: perspective(600px) rotateY(720deg); }
+}
+
+
+@media (prefers-reduced-motion: reduce) { .brandWrapper img { animation: none; } }
+
+@media (max-height: 700px) {
+    .brandWrapper { margin-bottom: 12px; font-size: 1.6rem; }
+    .brandWrapper img { width: 76px; height: 76px; }
+    .cardWrapper > div { padding: 20px 24px; }
+}
+
+@media (max-width: 560px) { .cardWrapper > div { padding: 24px; } }

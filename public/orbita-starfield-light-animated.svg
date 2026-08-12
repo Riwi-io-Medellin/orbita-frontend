@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 1920 1020"
+     preserveAspectRatio="xMidYMid slice"
+     role="img"
+     aria-labelledby="title desc">
+  <title id="title">Estrellas luminosas animadas de Órbita</title>
+  <desc id="desc">Campo transparente de estrellas blancas, violetas y cian para el fondo claro del inicio de sesión.</desc>
+
+  <defs>
+    <filter id="violetGlow" x="-350%" y="-350%" width="800%" height="800%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="blur"/>
+      <feFlood flood-color="#D9D5F5" flood-opacity=".52" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feGaussianBlur in="glow" stdDeviation="3.8" result="wideGlow"/>
+      <feMerge><feMergeNode in="wideGlow"/><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="cyanGlow" x="-350%" y="-350%" width="800%" height="800%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" result="blur"/>
+      <feFlood flood-color="#E9FAFF" flood-opacity=".44" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feGaussianBlur in="glow" stdDeviation="3.6" result="wideGlow"/>
+      <feMerge><feMergeNode in="wideGlow"/><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="whiteGlow" x="-350%" y="-350%" width="800%" height="800%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1.7" result="blur"/>
+      <feFlood flood-color="#FFFFFF" flood-opacity=".58" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feGaussianBlur in="glow" stdDeviation="4" result="wideGlow"/>
+      <feMerge><feMergeNode in="wideGlow"/><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <symbol id="dot" overflow="visible">
+      <circle r=".9" fill="currentColor"/>
+    </symbol>
+    <symbol id="cross" overflow="visible">
+      <path d="M-5.5 0H5.5M0-5.5V5.5" fill="none" stroke="currentColor" stroke-width=".8" stroke-linecap="round"/>
+      <circle r="1.25" fill="#FFFFFF"/>
+    </symbol>
+    <symbol id="spark" overflow="visible">
+      <path d="M0-7.5C.9-2.5 2.5-.9 7.5 0C2.5.9.9 2.5 0 7.5C-.9 2.5-2.5.9-7.5 0C-2.5-.9-.9-2.5 0-7.5Z" fill="#FFFFFF" stroke="currentColor" stroke-width=".45"/>
+    </symbol>
+    <symbol id="smallSpark" overflow="visible">
+      <path d="M0-4C.5-1.4 1.4-.5 4 0C1.4.5.5 1.4 0 4C-.5 1.4-1.4.5-4 0C-1.4-.5-.5-1.4 0-4Z" fill="currentColor"/>
+    </symbol>
+
+    <style>
+      .field { pointer-events: none; }
+      .dust { opacity: .38; }
+      .star {
+        opacity: .3;
+        will-change: opacity, transform;
+        animation-duration: calc(var(--duration) + 16s);
+        animation-delay: var(--delay);
+        animation-iteration-count: infinite;
+        animation-timing-function: cubic-bezier(.45, 0, .55, 1);
+      }
+      .a { animation-name: luminousA; }
+      .b { animation-name: luminousB; }
+      .c { animation-name: luminousC; }
+
+      @keyframes luminousA {
+        0%, 14%, 100% { opacity: .2; transform: translate(0, 0); }
+        39% { opacity: .78; transform: translate(8px, -9px); }
+        64% { opacity: .32; transform: translate(3px, -14px); }
+        81% { opacity: .58; transform: translate(-7px, -4px); }
+      }
+      @keyframes luminousB {
+        0%, 26%, 100% { opacity: .18; transform: translate(0, 0); }
+        51% { opacity: .7; transform: translate(-12px, 6px); }
+        69% { opacity: .38; transform: translate(-4px, 13px); }
+      }
+      @keyframes luminousC {
+        0%, 42%, 68%, 100% { opacity: .16; transform: translate(0, 0); }
+        52% { opacity: .86; transform: translate(11px, 4px); }
+        59% { opacity: .42; transform: translate(6px, 10px); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .star { animation: none; opacity: .52; transform: none; }
+      }
+    </style>
+  </defs>
+
+  <g class="field">
+    <!-- Polvo brillante: discreto, visible sobre el fondo claro -->
+    <g class="dust" color="#FFFFFF">
+      <use href="#dot" xlink:href="#dot" x="72" y="120"/>
+      <use href="#dot" xlink:href="#dot" x="138" y="318"/>
+      <use href="#dot" xlink:href="#dot" x="222" y="68"/>
+      <use href="#dot" xlink:href="#dot" x="307" y="456"/>
+      <use href="#dot" xlink:href="#dot" x="394" y="204"/>
+      <use href="#dot" xlink:href="#dot" x="485" y="726"/>
+      <use href="#dot" xlink:href="#dot" x="566" y="96"/>
+      <use href="#dot" xlink:href="#dot" x="632" y="934"/>
+      <use href="#dot" xlink:href="#dot" x="1292" y="80"/>
+      <use href="#dot" xlink:href="#dot" x="1358" y="676"/>
+      <use href="#dot" xlink:href="#dot" x="1436" y="232"/>
+      <use href="#dot" xlink:href="#dot" x="1514" y="836"/>
+      <use href="#dot" xlink:href="#dot" x="1598" y="476"/>
+      <use href="#dot" xlink:href="#dot" x="1684" y="142"/>
+      <use href="#dot" xlink:href="#dot" x="1770" y="602"/>
+      <use href="#dot" xlink:href="#dot" x="1852" y="904"/>
+    </g>
+
+    <!-- Destellos grandes: pocos y con halo -->
+    <g color="#ECE9FF" filter="url(#whiteGlow)">
+      <use class="star c" href="#spark" xlink:href="#spark" x="188" y="188" style="--duration:9.6s;--delay:-6.4s"/>
+      <use class="star a" href="#spark" xlink:href="#spark" x="528" y="364" style="--duration:11.2s;--delay:-3.7s"/>
+      <use class="star b" href="#spark" xlink:href="#spark" x="1378" y="158" style="--duration:10.4s;--delay:-7.9s"/>
+      <use class="star c" href="#spark" xlink:href="#spark" x="1732" y="520" style="--duration:12.1s;--delay:-4.5s"/>
+      <use class="star a" href="#spark" xlink:href="#spark" x="1544" y="936" style="--duration:10.8s;--delay:-8.2s"/>
+    </g>
+
+    <!-- Cruces blancas y violetas -->
+    <g color="#FFFFFF" filter="url(#violetGlow)">
+      <use class="star a" href="#cross" xlink:href="#cross" x="94" y="566" style="--duration:8.8s;--delay:-2.9s"/>
+      <use class="star b" href="#cross" xlink:href="#cross" x="352" y="108" style="--duration:10.7s;--delay:-6.1s"/>
+      <use class="star c" href="#cross" xlink:href="#cross" x="436" y="590" style="--duration:9.9s;--delay:-4.2s"/>
+      <use class="star a" href="#cross" xlink:href="#cross" x="594" y="824" style="--duration:11.6s;--delay:-7.4s"/>
+      <use class="star b" href="#cross" xlink:href="#cross" x="1328" y="392" style="--duration:9.4s;--delay:-5.3s"/>
+      <use class="star c" href="#cross" xlink:href="#cross" x="1472" y="626" style="--duration:12.5s;--delay:-9.1s"/>
+      <use class="star a" href="#cross" xlink:href="#cross" x="1642" y="286" style="--duration:10.1s;--delay:-3.4s"/>
+      <use class="star b" href="#cross" xlink:href="#cross" x="1834" y="744" style="--duration:11.9s;--delay:-8.6s"/>
+    </g>
+
+    <!-- Chispas pequeñas violetas -->
+    <g color="#E9E6FF" filter="url(#violetGlow)">
+      <use class="star b" href="#smallSpark" xlink:href="#smallSpark" x="268" y="696" style="--duration:8.6s;--delay:-5.8s"/>
+      <use class="star a" href="#smallSpark" xlink:href="#smallSpark" x="474" y="276" style="--duration:10.9s;--delay:-2.1s"/>
+      <use class="star c" href="#smallSpark" xlink:href="#smallSpark" x="616" y="512" style="--duration:11.7s;--delay:-8.4s"/>
+      <use class="star b" href="#smallSpark" xlink:href="#smallSpark" x="1306" y="776" style="--duration:9.8s;--delay:-4.7s"/>
+      <use class="star a" href="#smallSpark" xlink:href="#smallSpark" x="1588" y="718" style="--duration:12.3s;--delay:-9.2s"/>
+      <use class="star c" href="#smallSpark" xlink:href="#smallSpark" x="1802" y="226" style="--duration:10.5s;--delay:-6.6s"/>
+    </g>
+
+    <!-- Acentos cian muy controlados -->
+    <g color="#EFFAFF" filter="url(#cyanGlow)">
+      <use class="star c" href="#smallSpark" xlink:href="#smallSpark" x="124" y="862" style="--duration:11.4s;--delay:-7.7s"/>
+      <use class="star a" href="#cross" xlink:href="#cross" x="548" y="158" style="--duration:12.6s;--delay:-5.1s"/>
+      <use class="star b" href="#smallSpark" xlink:href="#smallSpark" x="1426" y="892" style="--duration:9.7s;--delay:-3.2s"/>
+      <use class="star c" href="#cross" xlink:href="#cross" x="1870" y="398" style="--duration:12.8s;--delay:-9.5s"/>
+    </g>
+  </g>
+</svg>

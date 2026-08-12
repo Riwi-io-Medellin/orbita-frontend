@@ -11,28 +11,22 @@
     text-align: center;
 }
 
-.badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.logo {
     flex-shrink: 0;
-    border-radius: var(--radius-md);
-    background: var(--gradient-primary);
-    color: var(--color-primary-contrast);
+    object-fit: contain;
+    opacity: .94;
 }
 
-.sm .badge {
+.iconOnly { gap: 0; }
+
+.sm .logo {
     width: 36px;
     height: 36px;
-    font-size: var(--font-size-base);
 }
 
-.lg .badge {
+.lg .logo {
     width: 64px;
     height: 64px;
-    font-size: var(--font-size-2xl);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-glow-primary);
 }
 
 .name {

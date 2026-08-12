@@ -4,22 +4,21 @@ import styles from "./Brand.module.css";
 interface BrandProps {
     size?: "sm" | "lg";
     withCaption?: boolean;
+    iconOnly?: boolean;
     to?: string;
 }
 
-function Brand({ size = "sm", withCaption = false, to }: BrandProps) {
-    const classes = [styles.brand, styles[size]].join(" ");
+function Brand({ size = "sm", withCaption = false, iconOnly = false, to }: BrandProps) {
+    const classes = [styles.brand, styles[size], iconOnly ? styles.iconOnly : ""].join(" ");
 
     const content = (
         <>
-            <span className={styles.badge} aria-hidden="true">
-                ⬡
-            </span>
+            <img className={styles.logo} src="/orbita-logo-white.svg" alt="" />
 
-            <span>
+            {!iconOnly && <span>
                 <span className={styles.name}>Órbita</span>
                 {withCaption && <span className={styles.caption}>Riwi Systems</span>}
-            </span>
+            </span>}
         </>
     );
 

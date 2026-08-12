@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Avatar from "../components/Avatar";
 import Button from "../components/Button";
-import { ChevronDownIcon } from "../components/icons";
 import { useAuth } from "../modules/auth/hooks/useAuth";
 import type { User } from "../types/user";
 import styles from "./UserMenu.module.css";
@@ -76,19 +75,16 @@ function UserMenu({ user }: UserMenuProps) {
                 aria-expanded={open}
                 onClick={() => setOpen((value) => !value)}
             >
-                <div className={styles.userInfo}>
-                    <div className={styles.userName}>{user.name}</div>
-                    <div className={styles.userRole}>{user.role}</div>
-                </div>
-                <Avatar initials={getInitials(user.name)} />
-                <ChevronDownIcon
-                    className={[styles.chevron, open ? styles.chevronOpen : ""].join(" ")}
-                />
+                <Avatar className={styles.avatar} initials={getInitials(user.name)} size="sm" />
             </button>
 
             {open && (
                 <div className={styles.dropdown} role="menu">
-                    <div className={styles.dropdownRole}>{user.role}</div>
+                    <div className={styles.accountSummary}>
+                        <strong>{user.name}</strong>
+                        <span>{user.email}</span>
+                        <small>{user.role ?? "Sin rol"}</small>
+                    </div>
                     <Button
                         role="menuitem"
                         variant="ghost"

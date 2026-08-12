@@ -1,51 +1,50 @@
 .hero {
-    text-align: center;
-    padding: var(--space-6) 0;
+    max-width: 620px;
+    padding: 0;
 }
 
 .title {
     margin: 0;
-    font-size: var(--font-size-3xl);
+    font-size: clamp(2rem, 4vw, 3.35rem);
     font-weight: var(--font-weight-bold);
     color: var(--color-text);
 }
 
 .subtitle {
-    margin: var(--space-2) 0 0;
-    font-size: var(--font-size-lg);
+    margin: 12px 0 0;
+    font-size: 1.1rem;
+    line-height: 1.55;
     color: var(--color-text-muted);
 }
 
 .divider {
     border: none;
     border-top: 1px solid var(--color-border);
-    margin: var(--space-6) 0;
+    margin: 42px 0 30px;
+    border-top-color: rgba(109, 104, 186, .24);
 }
 
 .sectionHeader {
-    text-align: center;
-    margin-bottom: var(--space-6);
+    margin-bottom: 24px;
 }
 
 .sectionTitle {
     margin: 0;
-    font-size: var(--font-size-sm);
+    font-size: 1.45rem;
     font-weight: var(--font-weight-bold);
-    letter-spacing: var(--letter-spacing-wide);
-    text-transform: uppercase;
     color: var(--color-text);
 }
 
 .sectionSubtitle {
-    margin: var(--space-1) 0 0;
-    font-size: var(--font-size-sm);
+    margin: 6px 0 0;
+    font-size: .96rem;
     color: var(--color-text-muted);
 }
 
 .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-5);
+    gap: 18px;
 }
 
 @media (max-width: 900px) {
@@ -55,6 +54,8 @@
 }
 
 @media (max-width: 600px) {
+    .hero { text-align: center; }
+    .divider { margin: 32px 0 24px; }
     .grid {
         grid-template-columns: 1fr;
     }
