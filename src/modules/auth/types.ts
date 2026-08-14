@@ -5,4 +5,5 @@ export interface User {
     role: string | null;
     roles: string[];
     active: boolean;
+    is_platform_admin: boolean;
 }

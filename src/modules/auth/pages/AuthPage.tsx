@@ -17,26 +17,22 @@ function AuthPage() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const initialError = searchParams.get("error");
+    const [error, setError] = useState<string | null>(
+        initialError === "sso_access_denied"
+            ? "Tu cuenta no tiene acceso a esta aplicación."
+            : initialError === "sso_session_missing"
+              ? "La solicitud de acceso expiró. Intenta abrir la aplicación nuevamente."
+              : null,
+    );
 
     function continueAfterLogin() {
         const continueUrl = searchParams.get("continue");
-        if (!continueUrl) {
+        if (continueUrl !== "sso") {
             navigate("/apps", { replace: true });
             return;
         }
-
-        try {
-            const target = new URL(continueUrl);
-            const api = new URL(env.apiUrl);
-            if (target.origin === api.origin && target.pathname === "/api/sso/authorize") {
-                window.location.assign(target.toString());
-                return;
-            }
-        } catch {
-            // Invalid continuation URLs return to the normal catalog.
-        }
-        navigate("/apps", { replace: true });
+        window.location.assign(`${env.apiUrl}/auth/resume`);
     }
 
     async function submit(event: React.FormEvent) {

@@ -4,6 +4,8 @@ import ErrorMessage from "../../../components/ErrorMessage";
 
 const ERROR_MESSAGES: Record<string, string> = {
     authentication_failed: "No se pudo iniciar sesión con Microsoft.",
+    user_inactive: "Tu cuenta de Órbita está inactiva.",
+    sso_access_denied: "Tu cuenta no tiene acceso a esta aplicación.",
 };
 
 // Single landing spot for both OAuth outcomes: backend redirects here on
