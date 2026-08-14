@@ -37,7 +37,7 @@ function ApplicationSelectionPage() {
             ) : (
                 <div className={styles.grid}>
                     {apps.map((app) => (
-                        <AppCard key={app.id} id={app.id} title={app.name} description={app.description} icon={app.icon} url={app.url} />
+                        <AppCard key={app.id} id={app.id} slug={app.slug} title={app.name} description={app.description} icon={app.icon} url={app.url} />
                     ))}
                 </div>
             )}
