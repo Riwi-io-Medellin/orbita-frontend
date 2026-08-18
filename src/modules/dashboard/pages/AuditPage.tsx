@@ -23,7 +23,7 @@ function AuditPage() {
     const [logs, setLogs] = useState<AuditLog[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const isAdmin = user?.roles.includes("admin") ?? false;
+    const isAdmin = user?.is_platform_admin ?? false;
 
     useEffect(() => {
         if (!isAdmin) return;

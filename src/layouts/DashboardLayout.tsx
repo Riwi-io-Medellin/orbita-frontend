@@ -13,7 +13,7 @@ function DashboardLayout() {
             <header className={styles.header}>
                 <div className={styles.navigationGroup}>
                     <Brand size="sm" iconOnly to="/apps" />
-                    <DashboardNav isAdmin={user?.roles.includes("admin") ?? false} />
+                    <DashboardNav isAdmin={user?.is_platform_admin ?? false} />
                     {user && <div className={styles.userBox}><UserMenu user={user} /></div>}
                 </div>
             </header>

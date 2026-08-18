@@ -1,16 +1,19 @@
-import type { MouseEvent, ReactNode } from "react";
+import type { MouseEvent } from "react";
+import ApplicationIcon from "../../../components/ApplicationIcon";
 import { registerApplicationAccess } from "../services/applicationAccessService";
 import styles from "./AppCard.module.css";
 
 interface AppCardProps {
     id: string;
+    slug: string;
     title: string;
     description: string;
-    icon?: ReactNode;
+    icon: string | null;
     url: string;
 }
 
-function AppCard({ id, title, description, icon, url }: AppCardProps) {
+function AppCard({ id, slug, title, description, icon, url }: AppCardProps) {
+    const isTeamLead = slug === "teamlead";
     async function handleOpen(event: MouseEvent<HTMLAnchorElement>) {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
@@ -24,9 +27,9 @@ function AppCard({ id, title, description, icon, url }: AppCardProps) {
     }
 
     return (
-        <a href={url} className={styles.card} onClick={handleOpen}>
+        <a href={url} className={[styles.card, isTeamLead ? styles.teamLead : ""].join(" ")} onClick={handleOpen}>
             <div className={[styles.icon, !icon ? styles.iconPlaceholder : ""].join(" ")}>
-                {icon || title.slice(0, 1)}
+                {isTeamLead ? <img className={styles.teamLeadLogo} src="/teamlead-logo.svg" alt="Logo de TeamLead" /> : <ApplicationIcon name={icon} />}
             </div>
 
             <h3 className={styles.title}>{title}</h3>

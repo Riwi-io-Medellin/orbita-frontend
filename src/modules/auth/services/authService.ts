@@ -2,8 +2,9 @@ import { env } from "../../../config/env";
 import { apiFetch } from "../../../services/apiConfig";
 import type { User } from "../types";
 
-export function login() {
-  window.location.href = `${env.apiUrl}/auth/login`;
+export function login(continueUrl?: string | null) {
+  const query = continueUrl ? `?continue=${encodeURIComponent(continueUrl)}` : "";
+  window.location.href = `${env.apiUrl}/auth/login${query}`;
 }
 
 export async function getCurrentUser(): Promise<User | null> {
