@@ -1,0 +1,36 @@
+.wizard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.stepTitle {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--color-text);
+}
+
+.hint {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.roleRow {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+}

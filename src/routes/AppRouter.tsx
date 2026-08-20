@@ -14,7 +14,10 @@ import ApplicationSelectionPage from "../modules/dashboard/pages/ApplicationSele
 import AuditPage from "../modules/dashboard/pages/AuditPage";
 import SettingsPage from "../modules/dashboard/pages/SettingsPage";
 import DashboardPage from "../modules/dashboard/pages/dashboard-page.tsx";
+import AppsRegistryPage from "../modules/apps/pages/AppsRegistryPage";
 import NotFoundPage from "../modules/not-found/pages/NotFoundPage";
+import UsersPage from "../modules/users/pages/UsersPage";
+import AdminRoute from "./AdminRoute";
 import ProtectedRoute from "./ProtectedRoute";
 
 function AppRouter() {
@@ -32,9 +35,15 @@ function AppRouter() {
                 <Route element={<ProtectedRoute />}>
                     <Route element={<DashboardLayout />}>
                         <Route path="/apps" element={<ApplicationSelectionPage />} />
-                        <Route path="/audit" element={<AuditPage />} />
                         <Route path="/settings" element={<SettingsPage />} />
                         <Route path="/dashboard" element={<DashboardPage />} />
+
+                        {/* Admin-only (further gated by AdminRoute, UX-only — backend enforces the real check) */}
+                        <Route element={<AdminRoute />}>
+                            <Route path="/audit" element={<AuditPage />} />
+                            <Route path="/users" element={<UsersPage />} />
+                            <Route path="/admin/registry" element={<AppsRegistryPage />} />
+                        </Route>
                     </Route>
                 </Route>
 

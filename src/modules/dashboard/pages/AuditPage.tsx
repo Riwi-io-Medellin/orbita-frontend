@@ -1,9 +1,7 @@
-import { Navigate } from "react-router";
 import { useEffect, useState } from "react";
 import EmptyState from "../../../components/EmptyState";
 import ErrorMessage from "../../../components/ErrorMessage";
 import PageLoader from "../../../components/PageLoader";
-import { useAuth } from "../../auth/hooks/useAuth";
 import { getAuditLogs, type AuditLog } from "../services/auditService";
 import styles from "./AuditPage.module.css";
 
@@ -19,18 +17,13 @@ function formatEvent(event: string) {
 }
 
 function AuditPage() {
-    const { user } = useAuth();
     const [logs, setLogs] = useState<AuditLog[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const isAdmin = user?.is_platform_admin ?? false;
 
     useEffect(() => {
-        if (!isAdmin) return;
         getAuditLogs().then(setLogs).catch(() => setError("No se pudo cargar la auditoría.")).finally(() => setLoading(false));
-    }, [isAdmin]);
-
-    if (!isAdmin) return <Navigate to="/apps" replace />;
+    }, []);
 
     return (
         <section className={styles.page}>

@@ -1,9 +1,0 @@
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: string | null;
-    roles: string[];
-    active: boolean;
-    is_platform_admin: boolean;
-}
