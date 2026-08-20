@@ -13,11 +13,13 @@ import {
   getCurrentUser,
   logout as logoutService,
 } from "../services/authService";
+import { setUnauthorizedHandler } from "../../../services/apiConfig";
 
 export interface AuthContextType {
     user: User | null;
     loading: boolean;
     isAuthenticated: boolean;
+    isAdmin: boolean;
 
     refreshUser: () => Promise<void>;
     logout: () => Promise<void>;
@@ -55,6 +57,9 @@ export function AuthProvider({
 
   useEffect(() => {
     refreshUser();
+
+    setUnauthorizedHandler(() => setUser(null));
+    return () => setUnauthorizedHandler(null);
   }, []);
 
   return createElement(
@@ -64,6 +69,7 @@ export function AuthProvider({
         user,
         loading,
         isAuthenticated: user !== null,
+        isAdmin: user?.is_platform_admin ?? false,
         refreshUser,
         logout,
       },

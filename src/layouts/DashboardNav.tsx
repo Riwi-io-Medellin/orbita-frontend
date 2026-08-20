@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { ClockCounterClockwise, GearSix, House } from "@phosphor-icons/react";
+import { ClockCounterClockwise, GearSix, House, Plugs, Users } from "@phosphor-icons/react";
 import styles from "./DashboardNav.module.css";
 
 interface DashboardNavProps {
@@ -8,6 +8,8 @@ interface DashboardNavProps {
 
 const items = [
     { to: "/apps", label: "Inicio", icon: <House size={21} weight="bold" /> },
+    { to: "/users", label: "Usuarios", icon: <Users size={21} weight="bold" />, adminOnly: true },
+    { to: "/admin/registry", label: "Apps SSO", icon: <Plugs size={21} weight="bold" />, adminOnly: true },
     { to: "/audit", label: "Auditoría", icon: <ClockCounterClockwise size={21} weight="bold" />, adminOnly: true },
     { to: "/settings", label: "Configuración", icon: <GearSix size={21} weight="bold" /> },
 ];

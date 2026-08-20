@@ -1,6 +1,6 @@
 import { env } from "../../../config/env";
 import { apiFetch } from "../../../services/apiConfig";
-import type { User } from "../types";
+import type { User } from "../../../types/user";
 
 export function login(continueUrl?: string | null) {
   const query = continueUrl ? `?continue=${encodeURIComponent(continueUrl)}` : "";

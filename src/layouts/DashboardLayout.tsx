@@ -6,14 +6,14 @@ import UserMenu from "./UserMenu";
 import styles from "./DashboardLayout.module.css";
 
 function DashboardLayout() {
-    const { user } = useAuth();
+    const { user, isAdmin } = useAuth();
 
     return (
         <div className={styles.page}>
             <header className={styles.header}>
                 <div className={styles.navigationGroup}>
                     <Brand size="sm" iconOnly to="/apps" />
-                    <DashboardNav isAdmin={user?.is_platform_admin ?? false} />
+                    <DashboardNav isAdmin={isAdmin} />
                     {user && <div className={styles.userBox}><UserMenu user={user} /></div>}
                 </div>
             </header>
