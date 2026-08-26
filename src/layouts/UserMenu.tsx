@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Avatar from "../components/Avatar";
+import { User as UserIcon } from "@phosphor-icons/react";
 import Button from "../components/Button";
 import { useAuth } from "../modules/auth/hooks/useAuth";
 import type { User } from "../types/user";
@@ -7,15 +7,6 @@ import styles from "./UserMenu.module.css";
 
 interface UserMenuProps {
     user: User;
-}
-
-function getInitials(name: string): string {
-    return name
-        .split(" ")
-        .map((part) => part[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase();
 }
 
 function UserMenu({ user }: UserMenuProps) {
@@ -73,9 +64,12 @@ function UserMenu({ user }: UserMenuProps) {
                 className={styles.trigger}
                 aria-haspopup="menu"
                 aria-expanded={open}
+                aria-label="Abrir menú de usuario"
                 onClick={() => setOpen((value) => !value)}
             >
-                <Avatar className={styles.avatar} initials={getInitials(user.name)} size="sm" />
+                <span className={styles.userIcon} aria-hidden="true">
+                    <UserIcon size={23} weight="bold" />
+                </span>
             </button>
 
             {open && (

@@ -31,7 +31,12 @@ export interface RedirectUri {
 export interface AppRole {
     id: string;
     app_id: string;
+    /** Stable key emitted in the app JWT. */
     name: string;
+    display_name: string;
+    description: string | null;
+    is_active: boolean;
+    managed_by_app: boolean;
 }
 
 export interface ListAppsParams {
@@ -68,7 +73,6 @@ export async function listApps(params: ListAppsParams): Promise<App[]> {
     return response.json();
 }
 
-// Not in the documented endpoint map — verify against live backend/OpenAPI schema before relying further.
 export async function updateAppStatus(clientId: string, isActive: boolean): Promise<App> {
     const response = await apiFetch(`/apps/${encodeClientId(clientId)}`, {
         method: "PATCH",
@@ -165,8 +169,7 @@ export async function bulkUnassignAppRole(clientId: string, roleId: string, user
 }
 
 // --- Role-assignment rows for one app (GET /apps/{client_id}/users) -------
-// One row per (user, role) pair. Users with visibility but zero roles do
-// NOT appear here — there is no endpoint to list them.
+// One row per (user, role) pair. A role is the only access grant for an SSO app.
 
 export interface AppRoleAssignmentRow {
     user_id: string;
@@ -218,7 +221,9 @@ export function groupAppUsersByUser(rows: AppRoleAssignmentRow[]): AppUserWithRo
     return [...byUser.values()];
 }
 
-// --- Visibility grants (target = catalog application_id, not client_id) ---
+// --- Catalog-only direct grants (target = catalog application_id, not client_id) ---
+// These endpoints intentionally reject SSO apps. For an App in this module, use
+// assignAppRole/bulkAssignAppRole: an app-scoped role grants both visibility and SSO access.
 
 export interface BulkVisibilityResult {
     updated_user_ids: string[];

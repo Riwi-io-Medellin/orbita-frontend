@@ -5,12 +5,9 @@ import Checkbox from "../../../components/Checkbox";
 import Pagination from "../../../components/Pagination";
 import Select from "../../../components/Select";
 import Table from "../../../components/Table";
-import type { AdminUser } from "../../users/services/userService";
 import {
     assignAppRole,
     bulkAssignAppRole,
-    bulkGrantVisibility,
-    bulkRevokeVisibility,
     bulkUnassignAppRole,
     groupAppUsersByUser,
     listAppUsers,
@@ -21,7 +18,6 @@ import {
     type AppUserWithRoles,
 } from "../services/appRegistryService";
 import AddUserToAppWizard from "./AddUserToAppWizard";
-import UserMultiPicker from "./UserMultiPicker";
 import styles from "./AppMembersSection.module.css";
 
 const LIMIT = 20;
@@ -40,8 +36,6 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [bulkRoleId, setBulkRoleId] = useState("");
 
-    const [grantPicker, setGrantPicker] = useState<AdminUser[]>([]);
-    const [revokePicker, setRevokePicker] = useState<AdminUser[]>([]);
     const [wizardOpen, setWizardOpen] = useState(false);
 
     const [banner, setBanner] = useState<{ variant: "success" | "error"; message: string } | null>(null);
@@ -78,37 +72,6 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
 
     function toggleSelectAll() {
         setSelected((prev) => (prev.size === roleRows.length ? new Set() : new Set(roleRows.map((r) => r.user_id))));
-    }
-
-    async function handleGrantVisibility() {
-        if (!app.application_id || grantPicker.length === 0) return;
-        setBusy(true);
-        setBanner(null);
-        try {
-            const result = await bulkGrantVisibility(app.application_id, grantPicker.map((u) => u.id));
-            setBanner({ variant: "success", message: `Visibilidad otorgada a ${result.updated_user_ids.length} usuarios.` });
-            setGrantPicker([]);
-        } catch (err) {
-            setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo otorgar visibilidad." });
-        } finally {
-            setBusy(false);
-        }
-    }
-
-    async function handleRevokeVisibility() {
-        if (!app.application_id || revokePicker.length === 0) return;
-        setBusy(true);
-        setBanner(null);
-        try {
-            const result = await bulkRevokeVisibility(app.application_id, revokePicker.map((u) => u.id));
-            setBanner({ variant: "success", message: `Visibilidad quitada a ${result.updated_user_ids.length} usuarios.` });
-            setRevokePicker([]);
-            reload();
-        } catch (err) {
-            setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo quitar la visibilidad." });
-        } finally {
-            setBusy(false);
-        }
     }
 
     async function handleBulkAssignRole() {
@@ -167,40 +130,17 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
         }
     }
 
-    const roleOptions = roles.map((role) => ({ value: role.id, label: role.name }));
+    const roleOptions = roles.map((role) => ({ value: role.id, label: `${role.display_name} (${role.name})` }));
 
     return (
         <section className={styles.section}>
             <h3>Acceso y roles</h3>
             <p className={styles.hint}>
-                La visibilidad (puede ver e iniciar sesión en la app) y los roles (qué puede hacer una vez dentro) son
-                independientes. Solo aparecen aquí los usuarios con al menos un rol asignado en esta app — asignar un
-                rol otorga visibilidad automáticamente.
+                Un rol de esta aplicación es el permiso de acceso: habilita la tarjeta en Órbita, el inicio de sesión
+                por SSO y define qué puede hacer el usuario dentro de ella.
             </p>
 
             {banner && <Banner variant={banner.variant} message={banner.message} onDismiss={() => setBanner(null)} />}
-
-            {!app.application_id ? (
-                <Banner
-                    variant="warning"
-                    message="Esta aplicación no tiene un id de catálogo (application_id) — la visibilidad no se puede gestionar todavía."
-                />
-            ) : (
-                <div className={styles.visibilityBlock}>
-                    <div className={styles.visibilityAction}>
-                        <UserMultiPicker id="grant-visibility-search" label="Otorgar visibilidad" selected={grantPicker} onChange={setGrantPicker} disabled={busy} />
-                        <Button type="button" disabled={busy || grantPicker.length === 0} onClick={handleGrantVisibility}>
-                            Otorgar visibilidad
-                        </Button>
-                    </div>
-                    <div className={styles.visibilityAction}>
-                        <UserMultiPicker id="revoke-visibility-search" label="Quitar visibilidad" selected={revokePicker} onChange={setRevokePicker} disabled={busy} />
-                        <Button type="button" variant="ghost" disabled={busy || revokePicker.length === 0} onClick={handleRevokeVisibility}>
-                            Quitar visibilidad
-                        </Button>
-                    </div>
-                </div>
-            )}
 
             <div className={styles.toolbar}>
                 <Button type="button" onClick={() => setWizardOpen(true)}>Agregar usuario a esta app</Button>
@@ -261,7 +201,7 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
                 loading={loading}
                 loadingMessage="Cargando usuarios…"
                 error={error}
-                emptyState={{ title: "Sin usuarios con rol", description: "Otorga visibilidad y asigna un rol para empezar." }}
+                emptyState={{ title: "Sin usuarios con acceso", description: "Asigna un rol para habilitar el acceso a esta aplicación." }}
             />
 
             <Pagination limit={LIMIT} offset={offset} itemCount={rawRows.length} onPageChange={setOffset} />
@@ -297,7 +237,7 @@ function RowRoleAdder({ row, roles, busy, onAssign }: RowRoleAdderProps) {
             >
                 <option value="">+ Rol…</option>
                 {availableRoles.map((role) => (
-                    <option key={role.id} value={role.id}>{role.name}</option>
+                    <option key={role.id} value={role.id}>{role.display_name} ({role.name})</option>
                 ))}
             </select>
             <button

@@ -28,12 +28,16 @@ function AppCard({ id, slug, title, description, icon, url }: AppCardProps) {
 
     return (
         <a href={url} className={[styles.card, isTeamLead ? styles.teamLead : ""].join(" ")} onClick={handleOpen}>
-            <div className={[styles.icon, !icon ? styles.iconPlaceholder : ""].join(" ")}>
-                {isTeamLead ? <img className={styles.teamLeadLogo} src="/teamlead-logo.svg" alt="Logo de TeamLead" /> : <ApplicationIcon name={icon} />}
+            <div className={styles.details}>
+                <h3 className={styles.title}>{title}</h3>
+                <p className={styles.description}>{description}</p>
             </div>
 
-            <h3 className={styles.title}>{title}</h3>
-            <p className={styles.description}>{description}</p>
+            <div className={styles.logoStage}>
+                <div className={[styles.icon, !icon ? styles.iconPlaceholder : ""].join(" ")}>
+                    {isTeamLead ? <img className={styles.teamLeadLogo} src="/teamlead-logo.svg" alt="Logo de TeamLead" /> : <ApplicationIcon name={icon} size={148} />}
+                </div>
+            </div>
         </a>
     );
 }
