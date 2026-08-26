@@ -20,9 +20,12 @@
     outline: none;
 }
 
-.avatar {
+.userIcon {
+    display: grid;
+    place-items: center;
     width: 38px;
     height: 38px;
+    border-radius: 50%;
     background: #958FDD;
     color: #F8F7FF;
     box-shadow: 0 4px 11px rgba(109, 104, 186, .25);

@@ -1,4 +1,5 @@
 import { apiFetch, parseApiError } from "../../../services/apiConfig";
+import type { Role } from "../../../types/role";
 
 // Admin listing shape (GET/PATCH/DELETE /users*) — distinct from the session
 // User type in src/types/user.ts (which is /auth/me's shape and has no
@@ -125,6 +126,14 @@ export async function revokeRole(userId: string, roleId: string): Promise<void> 
     if (!response.ok) {
         throw new Error(await parseApiError(response, "No se pudo revocar el rol."));
     }
+}
+
+export async function getUserGlobalRoles(userId: string): Promise<Role[]> {
+    const response = await apiFetch(`/users/${userId}/global-roles`);
+    if (!response.ok) {
+        throw new Error(await parseApiError(response, "No se pudieron cargar los roles globales del usuario."));
+    }
+    return response.json();
 }
 
 // --- Single-user detail (applications they can see + roles they hold) ----

@@ -11,10 +11,11 @@ import {
 
 interface ApplicationIconProps {
     name: string | null;
+    size?: number;
 }
 
-function ApplicationIcon({ name }: ApplicationIconProps) {
-    const props = { size: 30, weight: "bold" as const, "aria-hidden": true };
+function ApplicationIcon({ name, size = 30 }: ApplicationIconProps) {
+    const props = { size, weight: "bold" as const, "aria-hidden": true };
 
     switch (name) {
         case "phone":

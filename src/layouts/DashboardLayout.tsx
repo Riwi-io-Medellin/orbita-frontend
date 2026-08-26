@@ -1,4 +1,4 @@
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import Brand from "../components/Brand";
 import { useAuth } from "../modules/auth/hooks/useAuth";
 import DashboardNav from "./DashboardNav";
@@ -7,6 +7,8 @@ import styles from "./DashboardLayout.module.css";
 
 function DashboardLayout() {
     const { user, isAdmin } = useAuth();
+    const { pathname } = useLocation();
+    const isApplicationLauncher = pathname === "/apps";
 
     return (
         <div className={styles.page}>
@@ -18,7 +20,7 @@ function DashboardLayout() {
                 </div>
             </header>
 
-            <main className={styles.main}>
+            <main className={[styles.main, isApplicationLauncher ? styles.launcherMain : ""].join(" ")}>
                 <Outlet />
             </main>
         </div>

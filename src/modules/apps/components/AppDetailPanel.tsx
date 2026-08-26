@@ -125,20 +125,33 @@ function AppDetailPanel({ app }: AppDetailPanelProps) {
 
             <section className={styles.section}>
                 <h3>Roles de la aplicación</h3>
+                <p className={styles.hint}>
+                    Sincroniza el catálogo desde el backend de la aplicación. La clave técnica se envía en el JWT y el
+                    nombre visible solo se usa para administración.
+                </p>
                 <div className={styles.inlineForm}>
                     <TextField
                         id="new-role-name"
-                        label="Nuevo rol"
+                        label="Rol manual legado"
                         placeholder="staff"
                         value={newRoleName}
                         onChange={(e) => setNewRoleName(e.target.value)}
                     />
-                    <Button type="button" disabled={busy || !newRoleName.trim()} onClick={handleCreateRole}>Crear rol</Button>
+                    <Button type="button" disabled={busy || !newRoleName.trim()} onClick={handleCreateRole}>Crear rol manual</Button>
                 </div>
 
                 <Table
                     columns={[
-                        { key: "name", header: "Nombre", render: (row: AppRole) => row.name },
+                        {
+                            key: "name",
+                            header: "Rol",
+                            render: (row: AppRole) => <><strong>{row.display_name}</strong><br /><small>{row.name}</small></>,
+                        },
+                        {
+                            key: "source",
+                            header: "Origen",
+                            render: (row: AppRole) => row.managed_by_app ? "Sincronizado" : "Manual legado",
+                        },
                         {
                             key: "actions",
                             header: "",
@@ -154,7 +167,7 @@ function AppDetailPanel({ app }: AppDetailPanelProps) {
                     loading={rolesLoading}
                     loadingMessage="Cargando roles…"
                     error={rolesError}
-                    emptyState={{ title: "Sin roles", description: "Crea el primer rol para esta aplicación." }}
+                    emptyState={{ title: "Sin roles", description: "Sincroniza el catálogo desde el backend de esta aplicación." }}
                 />
             </section>
 

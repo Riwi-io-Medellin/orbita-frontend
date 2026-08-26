@@ -1,295 +1,311 @@
-import { useEffect, useState } from "react";
-import Banner from "../../../components/Banner";
+import { Check, MagnifyingGlass, X } from "@phosphor-icons/react";
+import { useEffect, useMemo, useState } from "react";
 import Button from "../../../components/Button";
-import Checkbox from "../../../components/Checkbox";
-import Modal from "../../../components/Modal";
-import Pagination from "../../../components/Pagination";
-import Select from "../../../components/Select";
-import Table from "../../../components/Table";
-import TextField from "../../../components/TextField";
-import { getGlobalRoles } from "../../dashboard/services/applicationsService";
+import EmptyState from "../../../components/EmptyState";
+import ErrorMessage from "../../../components/ErrorMessage";
+import PageLoader from "../../../components/PageLoader";
+import type { Role } from "../../../types/role";
 import { useAuth } from "../../auth/hooks/useAuth";
-import UserDetailModal from "../components/UserDetailModal";
+import { getGlobalRoles } from "../../dashboard/services/applicationsService";
 import {
-    bulkDeleteUsers,
-    bulkGrantRole,
-    bulkRevokeRole,
-    bulkUpdateStatus,
-    deleteUser,
+    assignAppRole,
+    listAppRoles,
+    listApps,
+    unassignAppRole,
+    type App,
+    type AppRole,
+} from "../../apps/services/appRegistryService";
+import {
+    getUserAppRoles,
+    getUserGlobalRoles,
+    grantRole,
     listUsers,
+    revokeRole,
     updateUserStatus,
     type AdminUser,
 } from "../services/userService";
-import type { Role } from "../../../types/role";
 import styles from "./UsersPage.module.css";
 
-const LIMIT = 20;
-
-type ConfirmAction =
-    | { kind: "delete-one"; userId: string; userName: string }
-    | { kind: "delete-bulk" };
+interface AppPermission {
+    app: App;
+    roles: AppRole[];
+}
 
 function UsersPage() {
     const { user: currentUser } = useAuth();
-
     const [users, setUsers] = useState<AdminUser[]>([]);
-    const [offset, setOffset] = useState(0);
+    const [globalRoles, setGlobalRoles] = useState<Role[]>([]);
+    const [appPermissions, setAppPermissions] = useState<AppPermission[]>([]);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
+    const [query, setQuery] = useState("");
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const [searchInput, setSearchInput] = useState("");
-    const [search, setSearch] = useState("");
-
-    const [roles, setRoles] = useState<Role[]>([]);
-    const [bulkRoleId, setBulkRoleId] = useState("");
-
-    const [selected, setSelected] = useState<Set<string>>(new Set());
-    const [banner, setBanner] = useState<{ variant: "success" | "error"; message: string } | null>(null);
-    const [confirmAction, setConfirmAction] = useState<ConfirmAction | null>(null);
     const [busy, setBusy] = useState(false);
-    const [detailUser, setDetailUser] = useState<AdminUser | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [notice, setNotice] = useState<string | null>(null);
+    const [assignedGlobalRoleIds, setAssignedGlobalRoleIds] = useState<Set<string>>(new Set());
+    const [assignedAppRoleIds, setAssignedAppRoleIds] = useState<Set<string>>(new Set());
+    const [loadedPermissionsUserId, setLoadedPermissionsUserId] = useState<string | null>(null);
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
-            setOffset(0);
-            setSearch(searchInput.trim());
-        }, 400);
-        return () => clearTimeout(timeout);
-    }, [searchInput]);
+        let cancelled = false;
 
-    useEffect(() => {
-        getGlobalRoles().then(setRoles).catch(() => setRoles([]));
+        async function loadWorkspace() {
+            setLoading(true);
+            setError(null);
+            try {
+                const [loadedUsers, loadedGlobalRoles, apps] = await Promise.all([
+                    listUsers({ limit: 250, offset: 0 }),
+                    getGlobalRoles(),
+                    listApps({ limit: 250, offset: 0 }),
+                ]);
+                const permissions = await Promise.all(
+                    apps.map(async (app) => ({
+                        app,
+                        roles: await listAppRoles(app.client_id).catch(() => []),
+                    })),
+                );
+
+                if (cancelled) return;
+                setUsers(loadedUsers);
+                setGlobalRoles(loadedGlobalRoles);
+                setAppPermissions(permissions);
+                setSelectedId((current) => current && loadedUsers.some((user) => user.id === current) ? current : loadedUsers[0]?.id ?? null);
+            } catch (cause) {
+                if (!cancelled) setError(cause instanceof Error ? cause.message : "No se pudo cargar la administración de usuarios.");
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        }
+
+        void loadWorkspace();
+        return () => { cancelled = true; };
     }, []);
 
     useEffect(() => {
-        listUsers({ limit: LIMIT, offset, search: search || undefined })
-            .then((result) => {
-                setUsers(result);
-                setSelected(new Set());
-                setError(null);
+        if (!selectedId) {
+            return;
+        }
+
+        let cancelled = false;
+        Promise.all([getUserGlobalRoles(selectedId), getUserAppRoles(selectedId)])
+            .then(([roles, appRoles]) => {
+                if (cancelled) return;
+                setAssignedGlobalRoleIds(new Set(roles.map((role) => role.id)));
+                setAssignedAppRoleIds(new Set(appRoles.map((role) => role.role_id)));
+                setLoadedPermissionsUserId(selectedId);
             })
-            .catch(() => setError("No se pudieron cargar los usuarios."))
-            .finally(() => setLoading(false));
-    }, [offset, search]);
-
-    function reload() {
-        listUsers({ limit: LIMIT, offset, search: search || undefined })
-            .then((result) => setUsers(result))
-            .catch(() => setError("No se pudieron cargar los usuarios."))
-            .finally(() => setLoading(false));
-    }
-
-    function toggleSelected(userId: string) {
-        setSelected((prev) => {
-            const next = new Set(prev);
-            if (next.has(userId)) next.delete(userId);
-            else next.add(userId);
-            return next;
-        });
-    }
-
-    function toggleSelectAll() {
-        const selectableIds = users.filter((u) => u.id !== currentUser?.id).map((u) => u.id);
-        setSelected((prev) => (prev.size === selectableIds.length ? new Set() : new Set(selectableIds)));
-    }
-
-    async function runBulk(action: () => Promise<{ not_found_ids: string[] }>, describe: (updatedCount: number) => string) {
-        setBusy(true);
-        setBanner(null);
-        try {
-            const result = (await action()) as { updated?: unknown[]; updated_user_ids?: unknown[]; not_found_ids: string[] };
-            const updatedCount = (result.updated ?? result.updated_user_ids ?? []).length;
-            const missedCount = result.not_found_ids.length;
-            setBanner({
-                variant: missedCount > 0 ? "error" : "success",
-                message: missedCount > 0
-                    ? `${describe(updatedCount)} (${missedCount} no encontrados).`
-                    : describe(updatedCount),
+            .catch((cause) => {
+                if (!cancelled) setError(cause instanceof Error ? cause.message : "No se pudieron cargar los permisos del usuario.");
             });
-            reload();
-        } catch (err) {
-            setBanner({ variant: "error", message: err instanceof Error ? err.message : "Ocurrió un error inesperado." });
-        } finally {
-            setBusy(false);
-        }
-    }
 
-    async function handleBulkStatus(isActive: boolean) {
-        await runBulk(
-            () => bulkUpdateStatus([...selected], isActive),
-            (count) => isActive ? `${count} usuarios activados.` : `${count} usuarios desactivados.`,
-        );
-    }
+        return () => { cancelled = true; };
+    }, [selectedId]);
 
-    async function handleBulkGrantRole() {
-        if (!bulkRoleId) return;
-        await runBulk(() => bulkGrantRole(bulkRoleId, [...selected]), (count) => `Rol asignado a ${count} usuarios.`);
-    }
+    const selectedUser = users.find((user) => user.id === selectedId) ?? null;
+    const permissionsLoading = selectedUser !== null && loadedPermissionsUserId !== selectedUser.id;
+    const filteredUsers = useMemo(
+        () => users.filter((user) => `${user.full_name} ${user.email}`.toLowerCase().includes(query.trim().toLowerCase())),
+        [query, users],
+    );
 
-    async function handleBulkRevokeRole() {
-        if (!bulkRoleId) return;
-        await runBulk(() => bulkRevokeRole(bulkRoleId, [...selected]), (count) => `Rol revocado a ${count} usuarios.`);
-    }
-
-    async function handleConfirmedAction() {
-        if (!confirmAction) return;
+    async function toggleStatus() {
+        if (!selectedUser || selectedUser.id === currentUser?.id) return;
         setBusy(true);
-        setBanner(null);
+        setError(null);
         try {
-            if (confirmAction.kind === "delete-one") {
-                await deleteUser(confirmAction.userId);
-                setBanner({ variant: "success", message: `${confirmAction.userName} fue eliminado.` });
-            } else {
-                const result = await bulkDeleteUsers([...selected]);
-                setBanner({ variant: "success", message: `${result.updated.length} usuarios eliminados.` });
-            }
-            setConfirmAction(null);
-            reload();
-        } catch (err) {
-            setBanner({ variant: "error", message: err instanceof Error ? err.message : "Ocurrió un error inesperado." });
+            const updated = await updateUserStatus(selectedUser.id, !selectedUser.is_active);
+            setUsers((items) => items.map((item) => item.id === updated.id ? updated : item));
+            setNotice(updated.is_active ? "Usuario activado." : "Usuario desactivado.");
+        } catch (cause) {
+            setError(cause instanceof Error ? cause.message : "No se pudo actualizar el estado del usuario.");
         } finally {
             setBusy(false);
         }
     }
 
-    async function handleToggleStatus(targetUser: AdminUser) {
+    async function toggleGlobalRole(role: Role) {
+        if (!selectedUser) return;
+        const assigned = assignedGlobalRoleIds.has(role.id);
         setBusy(true);
-        setBanner(null);
+        setError(null);
         try {
-            await updateUserStatus(targetUser.id, !targetUser.is_active);
-            reload();
-        } catch (err) {
-            setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo actualizar el usuario." });
+            if (assigned) await revokeRole(selectedUser.id, role.id);
+            else await grantRole(selectedUser.id, role.id);
+
+            setAssignedGlobalRoleIds((current) => {
+                const next = new Set(current);
+                if (assigned) next.delete(role.id);
+                else next.add(role.id);
+                return next;
+            });
+            setNotice(assigned ? `Rol ${role.name} retirado.` : `Rol ${role.name} asignado.`);
+        } catch (cause) {
+            setError(cause instanceof Error ? cause.message : "No se pudo actualizar el rol global.");
         } finally {
             setBusy(false);
         }
     }
 
-    const selectableCount = users.filter((u) => u.id !== currentUser?.id).length;
-    const roleOptions = roles.map((role) => ({ value: role.id, label: role.name }));
+    async function toggleAppRole(permission: AppPermission, role: AppRole) {
+        if (!selectedUser) return;
+        const assigned = assignedAppRoleIds.has(role.id);
+        setBusy(true);
+        setError(null);
+        try {
+            if (assigned) await unassignAppRole(permission.app.client_id, role.id, selectedUser.id);
+            else await assignAppRole(permission.app.client_id, role.id, selectedUser.id);
+
+            setAssignedAppRoleIds((current) => {
+                const next = new Set(current);
+                if (assigned) next.delete(role.id);
+                else next.add(role.id);
+                return next;
+            });
+            setNotice(assigned ? `Rol retirado de ${permission.app.name}.` : `Acceso a ${permission.app.name} otorgado.`);
+        } catch (cause) {
+            setError(cause instanceof Error ? cause.message : "No se pudo actualizar el rol de la aplicación.");
+        } finally {
+            setBusy(false);
+        }
+    }
 
     return (
         <section className={styles.page}>
             <header className={styles.hero}>
-                <p className={styles.eyebrow}>Administración</p>
-                <h1>Usuarios</h1>
-                <p>Gestiona el acceso, estado y roles globales de los usuarios de Órbita.</p>
+                <div>
+                    <p className={styles.eyebrow}>Administración</p>
+                    <h1>Usuarios y accesos</h1>
+                    <p>Gestiona el estado de las cuentas y los permisos que cada persona recibe en Órbita y sus aplicaciones.</p>
+                </div>
             </header>
 
-            {banner && <Banner variant={banner.variant} message={banner.message} onDismiss={() => setBanner(null)} />}
-
-            <div className={styles.toolbar}>
-                <TextField
-                    id="user-search"
-                    label="Buscar"
-                    placeholder="Nombre o correo…"
-                    value={searchInput}
-                    onChange={(event) => setSearchInput(event.target.value)}
-                />
-            </div>
-
-            {selected.size > 0 && (
-                <div className={styles.bulkBar}>
-                    <span>{selected.size} seleccionados</span>
-                    <Button type="button" variant="ghost" disabled={busy} onClick={() => handleBulkStatus(true)}>Activar</Button>
-                    <Button type="button" variant="ghost" disabled={busy} onClick={() => handleBulkStatus(false)}>Desactivar</Button>
-                    <Select
-                        id="bulk-role"
-                        label=""
-                        aria-label="Rol"
-                        placeholder="Rol…"
-                        options={roleOptions}
-                        value={bulkRoleId}
-                        onChange={(event) => setBulkRoleId(event.target.value)}
-                    />
-                    <Button type="button" variant="ghost" disabled={busy || !bulkRoleId} onClick={handleBulkGrantRole}>Asignar rol</Button>
-                    <Button type="button" variant="ghost" disabled={busy || !bulkRoleId} onClick={handleBulkRevokeRole}>Quitar rol</Button>
-                    <Button type="button" variant="ghost" disabled={busy} onClick={() => setConfirmAction({ kind: "delete-bulk" })}>Eliminar</Button>
+            {notice && (
+                <div className={styles.notice} role="status">
+                    <Check size={18} weight="bold" />
+                    {notice}
+                    <button type="button" onClick={() => setNotice(null)} aria-label="Cerrar aviso"><X size={16} /></button>
                 </div>
             )}
+            {error && <ErrorMessage message={error} />}
 
-            <Table
-                columns={[
-                    {
-                        key: "select",
-                        header: selectableCount > 0 ? (
-                            <Checkbox
-                                checked={selected.size === selectableCount}
-                                onChange={toggleSelectAll}
-                                aria-label="Seleccionar todos"
-                            />
-                        ) : "",
-                        render: (row: AdminUser) => row.id === currentUser?.id ? null : (
-                            <div onClick={(e) => e.stopPropagation()}>
-                                <Checkbox
-                                    checked={selected.has(row.id)}
-                                    onChange={() => toggleSelected(row.id)}
-                                    aria-label={`Seleccionar ${row.full_name}`}
-                                />
-                            </div>
-                        ),
-                    },
-                    { key: "name", header: "Nombre", render: (row: AdminUser) => <strong>{row.full_name}</strong> },
-                    { key: "email", header: "Correo", render: (row: AdminUser) => row.email },
-                    {
-                        key: "status",
-                        header: "Estado",
-                        render: (row: AdminUser) => (
-                            <span className={row.is_active ? styles.statusActive : styles.statusInactive}>
-                                {row.is_active ? "Activo" : "Inactivo"}
-                            </span>
-                        ),
-                    },
-                    {
-                        key: "actions",
-                        header: "Acciones",
-                        render: (row: AdminUser) => row.id === currentUser?.id ? (
-                            <span className={styles.selfNote}>Tu cuenta</span>
-                        ) : (
-                            <div className={styles.rowActions} onClick={(e) => e.stopPropagation()}>
-                                <Button type="button" variant="ghost" disabled={busy} onClick={() => handleToggleStatus(row)}>
-                                    {row.is_active ? "Desactivar" : "Activar"}
-                                </Button>
-                                <Button
+            {loading ? <PageLoader message="Cargando usuarios…" /> : users.length === 0 ? (
+                <EmptyState title="No hay usuarios" description="Cuando haya cuentas disponibles, podrás administrar sus accesos aquí." />
+            ) : (
+                <div className={styles.workspace}>
+                    <aside className={styles.userList} aria-label="Usuarios">
+                        <label className={styles.search}>
+                            <MagnifyingGlass size={18} aria-hidden="true" />
+                            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar usuario" aria-label="Buscar usuario" />
+                        </label>
+                        <p className={styles.count}>{filteredUsers.length} usuarios</p>
+                        <div className={styles.users}>
+                            {filteredUsers.map((user) => (
+                                <button
+                                    key={user.id}
                                     type="button"
-                                    variant="ghost"
-                                    disabled={busy}
-                                    onClick={() => setConfirmAction({ kind: "delete-one", userId: row.id, userName: row.full_name })}
+                                    className={[styles.userRow, user.id === selectedId ? styles.selected : ""].join(" ")}
+                                    onClick={() => setSelectedId(user.id)}
                                 >
-                                    Eliminar
+                                    <span className={styles.avatar} aria-hidden="true">{user.full_name.slice(0, 1).toUpperCase()}</span>
+                                    <span className={styles.userIdentity}>
+                                        <strong>{user.full_name}</strong>
+                                        <small>{user.email}</small>
+                                    </span>
+                                    <i className={user.is_active ? styles.active : styles.inactive}>{user.is_active ? "Activo" : "Inactivo"}</i>
+                                </button>
+                            ))}
+                        </div>
+                    </aside>
+
+                    {selectedUser && (
+                        <article className={styles.detail} aria-busy={permissionsLoading}>
+                            <div className={styles.personHead}>
+                                <span className={styles.largeAvatar} aria-hidden="true">{selectedUser.full_name.slice(0, 1).toUpperCase()}</span>
+                                <div>
+                                    <h2>{selectedUser.full_name}</h2>
+                                    <p>{selectedUser.email}</p>
+                                </div>
+                                <span className={selectedUser.is_active ? styles.statusOn : styles.statusOff}>
+                                    {selectedUser.is_active ? "Activo" : "Inactivo"}
+                                </span>
+                            </div>
+
+                            <div className={styles.actionBar}>
+                                <div>
+                                    <strong>Estado de la cuenta</strong>
+                                    <span>{selectedUser.is_active ? "Puede iniciar sesión y usar sus aplicaciones." : "No puede iniciar sesión hasta activarla."}</span>
+                                </div>
+                                <Button type="button" variant="ghost" disabled={busy || selectedUser.id === currentUser?.id} onClick={toggleStatus}>
+                                    {selectedUser.id === currentUser?.id ? "Tu cuenta" : selectedUser.is_active ? "Desactivar" : "Activar"}
                                 </Button>
                             </div>
-                        ),
-                    },
-                ]}
-                rows={users}
-                getRowId={(row) => row.id}
-                loading={loading}
-                loadingMessage="Cargando usuarios…"
-                error={error}
-                emptyState={{ title: "No hay usuarios", description: "Ajusta la búsqueda o los filtros." }}
-                onRowClick={setDetailUser}
-            />
 
-            <Pagination limit={LIMIT} offset={offset} itemCount={users.length} onPageChange={setOffset} />
+                            <div className={styles.permissions}>
+                                <div>
+                                    <p className={styles.sectionLabel}>Roles de Órbita</p>
+                                    <h3>Acceso global</h3>
+                                    <p className={styles.hint}>Estos roles habilitan las aplicaciones de catálogo que los requieran.</p>
+                                </div>
+                                <div className={styles.globalRoles}>
+                                    {globalRoles.map((role) => {
+                                        const assigned = assignedGlobalRoleIds.has(role.id);
+                                        return (
+                                            <button
+                                                key={role.id}
+                                                type="button"
+                                                title={role.description ?? role.name}
+                                                className={[styles.role, assigned ? styles.roleActive : ""].join(" ")}
+                                                disabled={busy || permissionsLoading}
+                                                aria-pressed={assigned}
+                                                onClick={() => toggleGlobalRole(role)}
+                                            >
+                                                {assigned && <Check size={14} weight="bold" />}
+                                                {role.name}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
 
-            <UserDetailModal key={detailUser?.id ?? "none"} user={detailUser} roles={roles} onClose={() => setDetailUser(null)} />
+                                <div className={styles.appRolesHeader}>
+                                    <p className={styles.sectionLabel}>Permisos por aplicación</p>
+                                    <h3>Roles SSO</h3>
+                                    <p className={styles.hint}>Asignar un rol habilita la tarjeta en Órbita, el inicio de sesión SSO y los permisos dentro de esa aplicación.</p>
+                                </div>
 
-            <Modal
-                open={confirmAction !== null}
-                onClose={() => setConfirmAction(null)}
-                title="Confirmar eliminación"
-            >
-                <p>
-                    {confirmAction?.kind === "delete-one"
-                        ? `Esto eliminará a ${confirmAction.userName}. Esta acción no se puede deshacer desde aquí.`
-                        : `Esto eliminará ${selected.size} usuarios seleccionados. Esta acción no se puede deshacer desde aquí.`}
-                </p>
-                <div className={styles.modalActions}>
-                    <Button type="button" variant="ghost" onClick={() => setConfirmAction(null)}>Cancelar</Button>
-                    <Button type="button" loading={busy} onClick={handleConfirmedAction}>Eliminar</Button>
+                                {appPermissions.length === 0 ? (
+                                    <p className={styles.hint}>Aún no hay aplicaciones SSO registradas.</p>
+                                ) : appPermissions.map((permission) => (
+                                    <div className={styles.appPermission} key={permission.app.client_id}>
+                                        <div>
+                                            <strong>{permission.app.name}</strong>
+                                            <small>{permission.app.is_active ? "Aplicación activa" : "Aplicación inactiva"}</small>
+                                        </div>
+                                        <div className={styles.roleChoices}>
+                                            {permission.roles.length === 0 ? <span className={styles.noRoles}>Sin roles sincronizados</span> : permission.roles.map((role) => {
+                                                const assigned = assignedAppRoleIds.has(role.id);
+                                                return (
+                                                    <button
+                                                        key={role.id}
+                                                        type="button"
+                                                        title={role.description ?? role.name}
+                                                        className={[styles.role, assigned ? styles.roleActive : ""].join(" ")}
+                                                        disabled={busy || permissionsLoading || !permission.app.is_active}
+                                                        aria-pressed={assigned}
+                                                        onClick={() => toggleAppRole(permission, role)}
+                                                    >
+                                                        {assigned && <Check size={14} weight="bold" />}
+                                                        {role.display_name}
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </article>
+                    )}
                 </div>
-            </Modal>
+            )}
         </section>
     );
 }
