@@ -10,6 +10,8 @@
 .divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: var(--color-border); }
 .microsoftButton { width: min(100%, 340px) !important; height: 56px; margin: 0 auto; background: #F4F3F8; border: 1px solid #C9CBDF; border-radius: 14px; color: #171A45; padding: var(--space-3) var(--space-4); }
 .microsoftButton:hover { background: #F8F7FB !important; border-color: #AEB2D1; }
+.moodleButton { width: min(100%, 340px) !important; height: 56px; margin: 12px auto 0; background: #F4F3F8; border: 1px solid #C9CBDF; border-radius: 14px; color: #171A45; padding: var(--space-3) var(--space-4); }
+.moodleButton:hover { background: #F8F7FB !important; border-color: #AEB2D1; }
 .microsoftLogo { display: grid; grid-template-columns: repeat(2, 8px); gap: 2px; margin-right: 3px; }
 .microsoftLogo i { width: 8px; height: 8px; }
 .microsoftLogo i:nth-child(1) { background: #f35325; }.microsoftLogo i:nth-child(2) { background: #81bc06; }.microsoftLogo i:nth-child(3) { background: #05a6f0; }.microsoftLogo i:nth-child(4) { background: #ffba08; }

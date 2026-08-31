@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap");
+
+.page { min-height: 100svh; background: #f4f6f8; color: #1a2158; font-family: "Ubuntu", Arial, Helvetica, sans-serif; }
+.topbar { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 80px; background: #191f55; color: #fff; }
+.topbarLogo { display: block; width: 72px; height: 30px; object-fit: contain; object-position: left center; }
+.language { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: #fff; cursor: pointer; font: 500 15px "Ubuntu", Arial, Helvetica, sans-serif; padding: 6px 0; }
+.navigation { display: flex; align-items: center; gap: 18px; font-size: 15px; font-weight: 600; }
+.language, .iconButton, .loginLink { display: inline-flex; align-items: center; gap: 4px; border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; padding: 6px 0; }
+.iconButton { padding: 6px; }
+.loginLink { text-decoration: none; }
+.language:focus-visible, .iconButton:focus-visible, .loginLink:focus-visible, .submitButton:focus-visible, .forgotPassword:focus-visible { outline: 2px solid #6857ff; outline-offset: 3px; }
+.content { min-height: calc(100svh - 60px); display: grid; place-items: center; padding: 28px 24px; }
+.loginCard { width: min(500px, 100%); min-height: 540px; display: flex; flex-direction: column; padding: 64px 48px 22px; background: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, .12); }
+.resetCard { width: min(500px, 100%); min-height: 580px; padding: 66px 48px 56px; background: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, .12); }
+.resetSuccessCard { width: min(500px, 100%); min-height: 342px; display: grid; align-content: start; padding: 66px 48px 48px; background: #fff; box-shadow: 0 6px 18px rgba(0, 0, 0, .12); }
+.resetSuccessCard p { margin: 0; color: #4f4f4f; font-size: 16px; line-height: 1.45; }
+.resetSuccessCard p + p { margin-top: 18px; }
+.moodleLogo { display: block; width: min(100%, 350px); height: 150px; margin: 0 auto 28px; object-fit: contain; }
+.fields { display: grid; gap: 16px; }
+.fields input { width: 100%; height: 46px; border: 1px solid #d0d0d0; border-radius: 10px; padding: 0 16px; background: #fff; color: #4b4b4b; font: 18px "Ubuntu", Arial, Helvetica, sans-serif; }
+.fields input:focus { outline: 0; border-color: #6b5cff; box-shadow: 0 0 0 2px rgba(107, 92, 255, .16); }
+.fields input::placeholder { color: #4c4c4c; opacity: 1; }
+.submitButton { justify-self: start; height: 54px; padding: 0 16px; border: 0; border-radius: 4px; background: #192158; color: #fff; cursor: pointer; font: 18px "Ubuntu", Arial, Helvetica, sans-serif; }
+.submitButton:hover:not(:disabled) { background: #101744; }
+.submitButton:disabled { cursor: wait; opacity: .7; }
+.forgotPassword { justify-self: start; color: #192158; font-size: 14px; font-weight: 700; text-decoration: none; }
+.forgotPassword:hover { text-decoration: underline; }
+.forgotPassword { border: 0; background: transparent; cursor: pointer; padding: 0; font-family: "Ubuntu", Arial, Helvetica, sans-serif; }
+.returnToOrbita { justify-self: start; display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #4f4798; cursor: pointer; padding: 2px 0; font: 600 14px "Ubuntu", Arial, Helvetica, sans-serif; }
+.returnToOrbita:hover { color: #192158; text-decoration: underline; }
+.resetIntro h2 { margin: 0 0 8px; color: #192158; font-size: 22px; }
+.resetIntro p { margin: 0; color: #4c4c4c; font-size: 14px; line-height: 1.45; }
+.identifierType { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 4px; border: 1px solid #d0d0d0; border-radius: 8px; background: #f4f6f8; }
+.identifierType button { min-height: 34px; border: 0; border-radius: 5px; background: transparent; color: #4c4c4c; cursor: pointer; font: 600 14px Arial, Helvetica, sans-serif; }
+.identifierType .identifierTypeActive { background: #fff; color: #192158; box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+.resetConfirmation { margin: 0; border: 1px solid #82b894; border-radius: 6px; background: #edf8ef; color: #245d34; padding: 10px 12px; font-size: 14px; line-height: 1.4; }
+.backToLogin { justify-self: start; display: inline-flex; align-items: center; gap: 6px; border: 0; background: transparent; color: #4f4798; cursor: pointer; padding: 2px 0; font: 600 14px Arial, Helvetica, sans-serif; }
+.backToLogin:hover { color: #192158; text-decoration: underline; }
+.resetDescription { max-width: 380px; margin: 0 0 20px; color: #4f4f4f; font-size: 16px; line-height: 1.45; }
+.resetSection { display: grid; grid-template-columns: 1fr; gap: 18px; padding: 0 0 16px; border-bottom: 1px solid #d9dce1; }
+.resetSection + .resetSection { padding-top: 10px; }
+.resetSection h2 { margin: 0; color: #6857ff; font-size: 26px; font-weight: 400; line-height: 1.2; }
+.resetField { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: start; gap: 15px; color: #4f4f4f; font-size: 16px; line-height: 1.45; }
+.resetField input { width: 100%; height: 46px; margin-top: -6px; border: 1px solid #d0d0d0; border-radius: 8px; padding: 0 12px; font: 16px "Ubuntu", Arial, Helvetica, sans-serif; }
+.resetField input:focus { outline: 0; border-color: #6b5cff; box-shadow: 0 0 0 2px rgba(107, 92, 255, .16); }
+.resetButton { justify-self: start; margin-left: 107px; min-width: 82px; height: 46px; border: 0; border-radius: 4px; background: #192158; color: #fff; cursor: pointer; font: 700 15px "Ubuntu", Arial, Helvetica, sans-serif; }
+.resetButton:hover:not(:disabled) { background: #101744; }
+.resetButton:disabled { cursor: wait; opacity: .7; }
+.continueButton { justify-self: center; align-self: end; min-width: 98px; height: 46px; margin-top: 34px; border: 0; border-radius: 4px; background: #192158; color: #fff; cursor: pointer; font: 500 15px "Ubuntu", Arial, Helvetica, sans-serif; }
+.continueButton:hover { background: #101744; }
+.cardRule { height: 1px; margin-top: auto; background: #d9dce1; }
+.visuallyHidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; clip-path: inset(50%); }
+@media (max-width: 640px) { .topbar { padding: 0 20px; } .navigation { gap: 10px; } .language { font-size: 0; } .language svg { font-size: initial; } .content { padding: 24px 16px; } .loginCard { min-height: min(540px, calc(100svh - 108px)); padding: 48px 28px 22px; } .resetCard, .resetSuccessCard { min-height: 0; padding: 40px 28px; } .moodleLogo { height: 120px; margin-bottom: 24px; } .resetSection h2 { font-size: 22px; } .resetField { grid-template-columns: 1fr; gap: 6px; } .resetField input { margin-top: 0; } .resetButton { margin-left: 0; } }

@@ -10,6 +10,7 @@ import DashboardLayout from "../layouts/DashboardLayout";
 
 import AuthCallbackPage from "../modules/auth/pages/AuthCallbackPage";
 import AuthPage from "../modules/auth/pages/AuthPage";
+import MoodleLoginPage from "../modules/auth/pages/MoodleLoginPage";
 import ApplicationSelectionPage from "../modules/dashboard/pages/ApplicationSelectionPage";
 import AuditPage from "../modules/dashboard/pages/AuditPage";
 import SettingsPage from "../modules/dashboard/pages/SettingsPage";
@@ -30,6 +31,7 @@ function AppRouter() {
                     <Route path="/auth" element={<AuthPage />} />
                     <Route path="/auth/callback" element={<AuthCallbackPage />} />
                 </Route>
+                <Route path="/auth/moodle" element={<MoodleLoginPage />} />
 
                 {/* Application (protected) */}
                 <Route element={<ProtectedRoute />}>
