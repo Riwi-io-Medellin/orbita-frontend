@@ -158,6 +158,13 @@ export interface UserAppRole {
     role_name: string;
 }
 
+export interface UserExternalIdentity {
+    provider_code: string;
+    provider_name: string;
+    provider_email: string | null;
+    last_seen_at: string | null;
+}
+
 export async function getUserApplications(userId: string): Promise<UserApplication[]> {
     const response = await apiFetch(`/users/${userId}/applications`);
     if (!response.ok) {
@@ -170,6 +177,14 @@ export async function getUserAppRoles(userId: string): Promise<UserAppRole[]> {
     const response = await apiFetch(`/users/${userId}/app-roles`);
     if (!response.ok) {
         throw new Error(await parseApiError(response, "No se pudieron cargar los roles del usuario."));
+    }
+    return response.json();
+}
+
+export async function getUserExternalIdentities(userId: string): Promise<UserExternalIdentity[]> {
+    const response = await apiFetch(`/users/${userId}/external-identities`);
+    if (!response.ok) {
+        throw new Error(await parseApiError(response, "No se pudieron cargar los proveedores de inicio de sesión."));
     }
     return response.json();
 }
