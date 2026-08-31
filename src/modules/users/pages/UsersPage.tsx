@@ -17,12 +17,14 @@ import {
 } from "../../apps/services/appRegistryService";
 import {
     getUserAppRoles,
+    getUserExternalIdentities,
     getUserGlobalRoles,
     grantRole,
     listUsers,
     revokeRole,
     updateUserStatus,
     type AdminUser,
+    type UserExternalIdentity,
 } from "../services/userService";
 import styles from "./UsersPage.module.css";
 
@@ -44,6 +46,7 @@ function UsersPage() {
     const [notice, setNotice] = useState<string | null>(null);
     const [assignedGlobalRoleIds, setAssignedGlobalRoleIds] = useState<Set<string>>(new Set());
     const [assignedAppRoleIds, setAssignedAppRoleIds] = useState<Set<string>>(new Set());
+    const [externalIdentities, setExternalIdentities] = useState<UserExternalIdentity[]>([]);
     const [loadedPermissionsUserId, setLoadedPermissionsUserId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -87,15 +90,16 @@ function UsersPage() {
         }
 
         let cancelled = false;
-        Promise.all([getUserGlobalRoles(selectedId), getUserAppRoles(selectedId)])
-            .then(([roles, appRoles]) => {
+        Promise.all([getUserGlobalRoles(selectedId), getUserAppRoles(selectedId), getUserExternalIdentities(selectedId)])
+            .then(([roles, appRoles, identities]) => {
                 if (cancelled) return;
                 setAssignedGlobalRoleIds(new Set(roles.map((role) => role.id)));
                 setAssignedAppRoleIds(new Set(appRoles.map((role) => role.role_id)));
+                setExternalIdentities(identities);
                 setLoadedPermissionsUserId(selectedId);
             })
             .catch((cause) => {
-                if (!cancelled) setError(cause instanceof Error ? cause.message : "No se pudieron cargar los permisos del usuario.");
+                if (!cancelled) setError(cause instanceof Error ? cause.message : "No se pudo cargar el detalle del usuario.");
             });
 
         return () => { cancelled = true; };
@@ -239,6 +243,27 @@ function UsersPage() {
                                     {selectedUser.id === currentUser?.id ? "Tu cuenta" : selectedUser.is_active ? "Desactivar" : "Activar"}
                                 </Button>
                             </div>
+
+                            <section className={styles.identityProviders} aria-labelledby="identity-providers-title">
+                                <div>
+                                    <p className={styles.sectionLabel}>Identidad</p>
+                                    <h3 id="identity-providers-title">Proveedores de inicio de sesión</h3>
+                                    <p className={styles.hint}>Métodos externos vinculados a esta cuenta de Órbita.</p>
+                                </div>
+                                {permissionsLoading ? <p className={styles.hint}>Cargando proveedores…</p> : externalIdentities.length === 0 ? (
+                                    <p className={styles.hint}>Esta cuenta no tiene proveedores externos vinculados.</p>
+                                ) : (
+                                    <ul className={styles.providerList}>
+                                        {externalIdentities.map((identity) => (
+                                            <li key={identity.provider_code}>
+                                                <strong>{identity.provider_name}</strong>
+                                                <span>{identity.provider_email ?? "Sin correo reportado por el proveedor"}</span>
+                                                {identity.last_seen_at && <small>Último acceso: {new Date(identity.last_seen_at).toLocaleDateString("es-CO", { year: "numeric", month: "short", day: "numeric" })}</small>}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </section>
 
                             <div className={styles.permissions}>
                                 <div>

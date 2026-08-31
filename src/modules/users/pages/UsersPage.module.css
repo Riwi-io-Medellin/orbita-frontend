@@ -226,6 +226,45 @@
     font-size: .85rem;
 }
 
+.identityProviders {
+    display: grid;
+    gap: 13px;
+    margin-bottom: 25px;
+}
+
+.identityProviders h3 { margin: 0; }
+
+.providerList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.providerList li {
+    display: grid;
+    gap: 4px;
+    padding: 14px 15px;
+    border: 1px solid #E3E1F1;
+    border-radius: 15px;
+    background: #FFF;
+}
+
+.providerList strong { color: #514B9B; }
+
+.providerList span,
+.providerList small {
+    overflow: hidden;
+    color: #737797;
+    font-size: .8rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.providerList small { font-size: .73rem; }
+
 .permissions {
     display: grid;
     gap: 13px;

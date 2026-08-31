@@ -67,6 +67,7 @@ function AuthPage() {
                 Continuar con Microsoft
             </Button>
             <Button type="button" fullWidth variant="ghost" className={styles.moodleButton} onClick={openMoodleLogin}>
+                <img className={styles.moodleLogo} src="https://riwi.io/wp-content/uploads/2023/07/favicon.png" alt="" aria-hidden="true" />
                 Continuar con Moodle
             </Button>
         </>
