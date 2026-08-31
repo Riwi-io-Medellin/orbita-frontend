@@ -6,6 +6,8 @@ const ERROR_MESSAGES: Record<string, string> = {
     authentication_failed: "No se pudo iniciar sesión con Microsoft.",
     user_inactive: "Tu cuenta de Órbita está inactiva.",
     sso_access_denied: "Tu cuenta no tiene acceso a esta aplicación.",
+    provider_unavailable: "El servicio de autenticación no está disponible temporalmente. Intenta nuevamente.",
+    identity_link_conflict: "No pudimos vincular automáticamente tu cuenta institucional. Contacta a un administrador para validar tu acceso.",
 };
 
 // Single landing spot for both OAuth outcomes: backend redirects here on

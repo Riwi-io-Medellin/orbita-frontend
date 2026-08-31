@@ -43,6 +43,12 @@ function AuthPage() {
         finally { setLoading(false); }
     }
 
+    function openMoodleLogin() {
+        const continueUrl = searchParams.get("continue");
+        const query = continueUrl ? `?continue=${encodeURIComponent(continueUrl)}` : "";
+        navigate(`/auth/moodle${query}`);
+    }
+
     return (
         <>
             <div className={styles.header}>
@@ -59,6 +65,9 @@ function AuthPage() {
             <Button type="button" fullWidth variant="ghost" className={styles.microsoftButton} onClick={() => login(searchParams.get("continue"))}>
                 <span className={styles.microsoftLogo} aria-hidden="true"><i /><i /><i /><i /></span>
                 Continuar con Microsoft
+            </Button>
+            <Button type="button" fullWidth variant="ghost" className={styles.moodleButton} onClick={openMoodleLogin}>
+                Continuar con Moodle
             </Button>
         </>
     );
