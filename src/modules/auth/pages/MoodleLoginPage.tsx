@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, CaretDown, MagnifyingGlass, Translate } from "@phosphor-icons/react";
+import { ArrowLeft, CaretDown, Translate } from "@phosphor-icons/react";
 import { useNavigate, useSearchParams } from "react-router";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { env } from "../../../config/env";
