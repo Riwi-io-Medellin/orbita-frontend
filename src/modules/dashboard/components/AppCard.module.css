@@ -96,6 +96,16 @@
     object-fit: cover;
 }
 
+.match .logoStage {
+    background: #F7F6FC;
+}
+
+.matchLogo {
+    width: 88%;
+    max-height: 70%;
+    object-fit: contain;
+}
+
 .title {
     margin: 0 0 7px;
     color: var(--color-text);
