@@ -69,7 +69,7 @@ export function AuthProvider({
         user,
         loading,
         isAuthenticated: user !== null,
-        isAdmin: user?.is_platform_admin ?? false,
+        isAdmin: user?.roles.includes("admin") ?? false,
         refreshUser,
         logout,
       },
