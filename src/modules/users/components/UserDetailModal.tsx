@@ -99,7 +99,6 @@ function UserDetailModal({ user, roles, onClose }: UserDetailModalProps) {
                             <span className={user.is_active ? styles.badgeActive : styles.badgeInactive}>
                                 {user.is_active ? "Activo" : "Inactivo"}
                             </span>
-                            {user.is_platform_admin && <span className={styles.badgeAdmin}>Admin de plataforma</span>}
                             {user.deleted_at && <span className={styles.badgeDeleted}>Eliminado el {formatDate(user.deleted_at)}</span>}
                         </div>
                         <p className={styles.createdAt}>Creado el {formatDate(user.created_at)}</p>

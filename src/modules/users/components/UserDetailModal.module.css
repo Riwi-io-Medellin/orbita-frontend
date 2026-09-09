@@ -24,7 +24,6 @@
 
 .badgeActive,
 .badgeInactive,
-.badgeAdmin,
 .badgeDeleted {
     display: inline-flex;
     align-items: center;
@@ -36,7 +35,6 @@
 
 .badgeActive { background: color-mix(in srgb, var(--color-success) 15%, var(--color-surface)); color: var(--color-success); }
 .badgeInactive { background: var(--color-bg); color: var(--color-text-muted); }
-.badgeAdmin { background: color-mix(in srgb, var(--color-primary) 12%, var(--color-surface)); color: var(--color-primary); }
 .badgeDeleted { background: color-mix(in srgb, var(--color-danger) 15%, var(--color-surface)); color: var(--color-danger); }
 
 .createdAt {
