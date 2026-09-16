@@ -3,20 +3,9 @@
     margin-bottom: 22px;
 }
 
-.providerState {
-    display: grid;
-    justify-items: center;
-    gap: 12px;
-    width: min(100%, 340px);
-    min-height: 104px;
-    margin: 0 auto;
-    color: #5F648D;
-    font-size: var(--font-size-sm);
-    text-align: center;
-}
-
 .form { display: grid; gap: 14px; width: min(100%, 340px); margin: 0 auto; }
-.recovery { margin: -2px 0 0; color: #8589A8; font-size: var(--font-size-xs); text-align: right; }
+.recovery { display: grid; justify-items: end; gap: 4px; margin-top: -2px; }
+.recovery span { color: #8589A8; font-size: var(--font-size-xs); }
 .divider { display: flex; align-items: center; gap: var(--space-3); width: min(100%, 340px); margin: 20px auto; color: #8589A8; font-size: var(--font-size-xs); letter-spacing: normal; }
 .divider::before, .divider::after { content: ""; height: 1px; flex: 1; background: var(--color-border); }
 .microsoftButton { width: min(100%, 340px) !important; height: 56px; margin: 0 auto; background: #F4F3F8; border: 1px solid #C9CBDF; border-radius: 14px; color: #171A45; padding: var(--space-3) var(--space-4); }

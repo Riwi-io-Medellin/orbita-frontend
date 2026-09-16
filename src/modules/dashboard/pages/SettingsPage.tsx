@@ -9,7 +9,7 @@ import { changeMyPassword, updateMyProfile } from "../../auth/services/authServi
 import styles from "./SettingsPage.module.css";
 
 function SettingsPage() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [name, setName] = useState(user?.name ?? "");
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -21,8 +21,6 @@ function SettingsPage() {
     const [showCurrent, setShowCurrent] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
-    const { refreshUser } = useAuth();
-
     if (!user) return null;
 
     const loginMethod = user.auth_method === "moodle"
