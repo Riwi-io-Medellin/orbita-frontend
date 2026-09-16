@@ -1,21 +1,17 @@
 .panel {
     display: flex;
     flex-direction: column;
-    gap: var(--space-5);
+    gap: var(--space-6);
     padding: var(--space-5);
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
 }
 
-.summary { display: grid; gap: var(--space-2); }
-.summary h2 { margin: 0; color: var(--color-text); font-size: var(--font-size-xl); }
-.summary p { max-width: 58ch; margin: 0; color: var(--color-text-muted); line-height: 1.55; }
-
 .section {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-3);
 }
 
 .section h3 {
@@ -28,7 +24,6 @@
     margin: 0;
     font-size: var(--font-size-xs);
     color: var(--color-text-muted);
-    line-height: 1.55;
 }
 
 .inlineForm {
@@ -36,72 +31,4 @@
     align-items: flex-end;
     gap: var(--space-3);
     flex-wrap: wrap;
-    padding-top: var(--space-1);
-}
-
-.secretBox {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-3);
-    border: 1px solid var(--color-warning, var(--color-border));
-    border-radius: var(--radius-sm);
-    overflow-wrap: anywhere;
-}
-
-.sectionTabs {
-    display: inline-flex;
-    align-self: flex-start;
-    gap: var(--space-1);
-    padding: var(--space-1);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-pill);
-    background: var(--color-surface-muted);
-}
-
-.sectionTabs button {
-    min-height: 38px;
-    padding: 0 var(--space-4);
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: transparent;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    font: inherit;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-}
-
-.sectionTabs button:hover,
-.sectionTabs button:focus-visible { color: var(--color-text); outline: none; }
-.sectionTabs button:focus-visible { box-shadow: 0 0 0 2px var(--color-focus-ring); }
-.sectionTabs .activeTab { background: var(--color-surface); color: var(--color-text); box-shadow: var(--shadow-sm); }
-
-.settings { display: flex; flex-direction: column; gap: var(--space-3); }
-
-.settingsGroup {
-    border-bottom: 1px solid var(--color-border);
-    color: var(--color-text);
-}
-
-.settingsGroup summary {
-    padding: var(--space-4) 0;
-    cursor: pointer;
-    color: var(--color-text);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-}
-
-.settingsGroup section { padding: 0 0 var(--space-5); }
-
-@media (max-width: 560px) {
-    .sectionTabs { width: 100%; }
-    .sectionTabs button { flex: 1; padding: 0 var(--space-2); }
-}
-
-.flatTable {
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
 }

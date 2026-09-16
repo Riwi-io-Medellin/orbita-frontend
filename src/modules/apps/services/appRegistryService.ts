@@ -18,12 +18,6 @@ export interface AppCreated extends App {
     client_secret: string;
 }
 
-export interface AppSecretRotated extends App {
-    /** Returned once; replace it in the consuming application's secret store immediately. */
-    client_secret: string;
-    previous_secret_expires_at: string;
-}
-
 export interface CreateAppPayload {
     client_id: string;
     slug: string;
@@ -94,14 +88,6 @@ export async function updateAppStatus(clientId: string, isActive: boolean): Prom
     });
     if (!response.ok) {
         throw new Error(await parseApiError(response, "No se pudo actualizar el estado de la aplicación."));
-    }
-    return response.json();
-}
-
-export async function rotateAppSecret(clientId: string): Promise<AppSecretRotated> {
-    const response = await apiFetch(`/apps/${encodeClientId(clientId)}/rotate-secret`, { method: "POST" });
-    if (!response.ok) {
-        throw new Error(await parseApiError(response, "No se pudo rotar el secreto de la aplicación."));
     }
     return response.json();
 }

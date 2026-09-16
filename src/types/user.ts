@@ -5,6 +5,4 @@ export interface User {
     role: string | null;
     roles: string[];
     active: boolean;
-    must_change_password: boolean;
-    is_local_account: boolean;
 }

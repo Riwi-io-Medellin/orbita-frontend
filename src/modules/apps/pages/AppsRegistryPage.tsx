@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { Key, RocketLaunch } from "@phosphor-icons/react";
 import Banner from "../../../components/Banner";
 import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
-import PageHeader from "../../../components/PageHeader";
 import Pagination from "../../../components/Pagination";
 import Table from "../../../components/Table";
 import TextField from "../../../components/TextField";
@@ -52,11 +50,6 @@ function AppsRegistryPage() {
             .finally(() => setLoading(false));
     }
 
-    function openCreateForm() {
-        setFormError(null);
-        setCreateOpen(true);
-    }
-
     async function handleCreate() {
         setFormError(null);
         setBusy(true);
@@ -97,13 +90,17 @@ function AppsRegistryPage() {
 
     return (
         <section className={styles.page}>
-            <PageHeader
-                title="Apps"
-                description="Gestiona las aplicaciones conectadas a Órbita y quién puede usarlas."
-                actions={<Button type="button" onClick={openCreateForm}>Registrar aplicación</Button>}
-            />
+            <header className={styles.hero}>
+                <p className={styles.eyebrow}>Administración</p>
+                <h1>Aplicaciones SSO</h1>
+                <p>Registra apps que usan el inicio de sesión centralizado de Órbita y gestiona sus roles y usuarios.</p>
+            </header>
 
             {banner && <Banner variant={banner.variant} message={banner.message} onDismiss={() => setBanner(null)} />}
+
+            <div className={styles.toolbar}>
+                <Button type="button" onClick={() => setCreateOpen(true)}>Registrar aplicación</Button>
+            </div>
 
             <Table
                 columns={[
@@ -143,21 +140,13 @@ function AppsRegistryPage() {
                 loadingMessage="Cargando aplicaciones…"
                 error={error}
                 emptyState={{ title: "No hay aplicaciones registradas", description: "Registra la primera desde el botón de arriba." }}
-                className={styles.flatTable}
             />
 
             <Pagination limit={LIMIT} offset={offset} itemCount={apps.length} onPageChange={setOffset} />
 
-            <Modal
-                open={selectedApp !== null}
-                onClose={() => setSelectedClientId(null)}
-                title={selectedApp ? `Gestionar ${selectedApp.name}` : "Gestionar aplicación"}
-                dialogClassName={styles.manageDialog}
-            >
-                {selectedApp && <AppDetailPanel key={selectedApp.client_id} app={selectedApp} className={styles.modalDetail} />}
-            </Modal>
+            {selectedApp && <AppDetailPanel key={selectedApp.client_id} app={selectedApp} />}
 
-            <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Conectar una aplicación" dialogClassName={styles.createDialog}>
+            <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Registrar aplicación SSO">
                 <form
                     className={styles.form}
                     onSubmit={(event) => {
@@ -165,38 +154,16 @@ function AppsRegistryPage() {
                         handleCreate();
                     }}
                 >
-                    <div className={styles.formIntro}>
-                        <span className={styles.introIcon} aria-hidden="true"><RocketLaunch size={22} weight="bold" /></span>
-                        <div>
-                            <p>Conecta una aplicación al inicio de sesión de Órbita.</p>
-                        </div>
-                    </div>
                     {formError && <p className={styles.formError} role="alert">{formError}</p>}
-                    <fieldset className={styles.formSection}>
-                        <legend>Identidad de la aplicación</legend>
-                        <div className={styles.formGrid}>
-                            <TextField id="reg-client-id" label="Client ID" placeholder="teamlead" required minLength={2} maxLength={255} pattern="^[a-z0-9][a-z0-9._\-]*$" title="Usa minúsculas, números, puntos, guiones y guiones bajos." autoCapitalize="none" autoComplete="off" spellCheck={false} value={form.client_id} onChange={(e) => setForm({ ...form, client_id: e.target.value })} />
-                            <TextField id="reg-slug" label="Slug" placeholder="teamlead" required minLength={2} maxLength={80} pattern="^[a-z0-9][a-z0-9\-]*$" title="Usa minúsculas, números y guiones." autoCapitalize="none" autoComplete="off" spellCheck={false} value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
-                            <TextField id="reg-name" fieldClassName={styles.fullField} label="Nombre de la aplicación" placeholder="TeamLead" required maxLength={120} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                            <label className={[styles.textareaField, styles.fullField].join(" ")} htmlFor="reg-description">
-                                <span>Descripción</span>
-                                <textarea id="reg-description" placeholder="Clases, líderes y horarios." required maxLength={500} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-                            </label>
-                        </div>
-                    </fieldset>
-                    <fieldset className={styles.formSection}>
-                        <legend>Dirección de acceso</legend>
-                        <div className={styles.formGrid}>
-                            <TextField id="reg-url" fieldClassName={styles.fullField} label="URL de la aplicación" type="url" placeholder="https://teamlead.riwi.io" required maxLength={2048} autoCapitalize="none" autoComplete="url" spellCheck={false} value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
-                        </div>
-                    </fieldset>
-                    <div className={styles.secretNotice}>
-                        <Key size={18} weight="bold" aria-hidden="true" />
-                        <p>El secreto se muestra una sola vez. Guárdalo en la configuración segura de la aplicación.</p>
-                    </div>
+                    <TextField id="reg-client-id" label="Client ID" required pattern="^[a-z0-9][a-z0-9._\-]*$" title="minúsculas, números, puntos, guiones" value={form.client_id} onChange={(e) => setForm({ ...form, client_id: e.target.value })} />
+                    <TextField id="reg-slug" label="Slug" required pattern="^[a-z0-9][a-z0-9\-]*$" title="minúsculas, números, guiones" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
+                    <TextField id="reg-name" label="Nombre" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                    <TextField id="reg-description" label="Descripción" required value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                    <TextField id="reg-url" label="URL" type="url" required value={form.url} onChange={(e) => setForm({ ...form, url: e.target.value })} />
+                    <TextField id="reg-icon" label="Icono (opcional)" value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} />
                     <div className={styles.modalActions}>
                         <Button type="button" variant="ghost" onClick={() => setCreateOpen(false)}>Cancelar</Button>
-                        <Button type="submit" loading={busy}>Crear aplicación</Button>
+                        <Button type="submit" loading={busy}>Registrar</Button>
                     </div>
                 </form>
             </Modal>
@@ -204,7 +171,7 @@ function AppsRegistryPage() {
             <Modal
                 open={createdSecret !== null}
                 onClose={() => setCreatedSecret(null)}
-                title="Guarda el secreto de cliente"
+                title="Client secret"
             >
                 <p className={styles.secretWarning}>
                     Copia el client secret de <strong>{createdSecret?.name}</strong> ahora — no se puede volver a mostrar.

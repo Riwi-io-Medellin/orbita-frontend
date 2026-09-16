@@ -2,7 +2,7 @@ import { useState } from "react";
 import Banner from "../../../components/Banner";
 import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
-import RoleDropdown from "../../../components/RoleDropdown";
+import Select from "../../../components/Select";
 import type { AdminUser } from "../../users/services/userService";
 import { bulkAssignAppRole, type App, type AppRole } from "../services/appRegistryService";
 import UserMultiPicker from "./UserMultiPicker";
@@ -45,8 +45,7 @@ function AddUserToAppWizard({ app, roles, open, onClose, onDone }: AddUserToAppW
         setBanner(null);
         try {
             await bulkAssignAppRole(app.client_id, roleId, picked.map((u) => u.id));
-            setBanner({ variant: "success", message: `Acceso otorgado a ${picked.length} ${picked.length === 1 ? "persona" : "personas"}.` });
-            onDone();
+            setBanner({ variant: "success", message: "Rol asignado." });
         } catch (err) {
             setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo asignar el rol." });
         } finally {
@@ -55,27 +54,28 @@ function AddUserToAppWizard({ app, roles, open, onClose, onDone }: AddUserToAppW
     }
 
     return (
-        <Modal open={open} onClose={handleClose} title="Asignar acceso">
+        <Modal open={open} onClose={handleClose} title="Agregar usuario a la aplicación">
             <div className={styles.wizard}>
                 {banner && <Banner variant={banner.variant} message={banner.message} onDismiss={() => setBanner(null)} />}
 
                 <section className={styles.step}>
-                    <p className={styles.hint}>Elige personas y un rol. Al confirmar, se asignará a todas las seleccionadas.</p>
+                    <h4 className={styles.stepTitle}>Asignar acceso con rol</h4>
+                    <p className={styles.hint}>
+                        Un rol de esta aplicación otorga tanto visibilidad en Órbita como acceso por SSO.
+                    </p>
                     <UserMultiPicker id="wizard-user-picker" label="Usuario (nombre o correo)" selected={picked} onChange={setPicked} disabled={busy} />
                     <div className={styles.roleRow}>
-                        <div className={styles.roleField}>
-                            <span>Rol</span>
-                            <RoleDropdown
-                            ariaLabel="Rol"
+                        <Select
+                            id="wizard-role"
+                            label="Rol"
                             placeholder="Rol…"
                             options={roles.map((role) => ({ value: role.id, label: `${role.display_name} (${role.name})` }))}
                             value={roleId}
                             disabled={busy || picked.length === 0}
-                            onChange={setRoleId}
-                            />
-                        </div>
+                            onChange={(event) => setRoleId(event.target.value)}
+                        />
                         <Button type="button" disabled={busy || !roleId || picked.length === 0} onClick={handleAssignRole}>
-                            {picked.length > 0 ? `Asignar a ${picked.length} ${picked.length === 1 ? "persona" : "personas"}` : "Asignar acceso"}
+                            Otorgar acceso
                         </Button>
                     </div>
                 </section>

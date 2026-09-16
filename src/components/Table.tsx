@@ -19,7 +19,6 @@ interface TableProps<T> {
     error?: string | null;
     emptyState: { title: string; description?: string };
     onRowClick?: (row: T) => void;
-    className?: string;
 }
 
 function Table<T>({
@@ -31,7 +30,6 @@ function Table<T>({
     error = null,
     emptyState,
     onRowClick,
-    className,
 }: TableProps<T>) {
     if (loading) {
         return <PageLoader message={loadingMessage} />;
@@ -46,9 +44,8 @@ function Table<T>({
     }
 
     return (
-        <>
-            <div className={[styles.tableWrap, className].filter(Boolean).join(" ")}>
-                <table className={styles.table}>
+        <div className={styles.tableWrap}>
+            <table className={styles.table}>
                 <thead>
                     <tr>
                         {columns.map((column) => (
@@ -81,10 +78,8 @@ function Table<T>({
                         </tr>
                     ))}
                 </tbody>
-                </table>
-            </div>
-            <p className={styles.scrollHint}>Desliza para ver más</p>
-        </>
+            </table>
+        </div>
     );
 }
 

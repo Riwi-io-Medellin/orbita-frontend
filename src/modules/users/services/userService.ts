@@ -12,18 +12,6 @@ export interface AdminUser {
     is_active: boolean;
     deleted_at: string | null;
     created_at: string;
-    must_change_password: boolean;
-    is_local_account: boolean;
-}
-
-export interface CreatedLocalUser extends AdminUser {
-    temporary_password: string;
-}
-
-export async function createLocalUser(fullName: string, email: string): Promise<CreatedLocalUser> {
-    const response = await apiFetch("/users/", { method: "POST", body: JSON.stringify({ full_name: fullName, email }) });
-    if (!response.ok) throw new Error(await parseApiError(response, "No se pudo crear el usuario."));
-    return response.json();
 }
 
 export interface ListUsersParams {

@@ -3,7 +3,7 @@ import Banner from "../../../components/Banner";
 import Button from "../../../components/Button";
 import Checkbox from "../../../components/Checkbox";
 import Pagination from "../../../components/Pagination";
-import RoleDropdown from "../../../components/RoleDropdown";
+import Select from "../../../components/Select";
 import Table from "../../../components/Table";
 import {
     assignAppRole,
@@ -18,7 +18,6 @@ import {
     type AppUserWithRoles,
 } from "../services/appRegistryService";
 import AddUserToAppWizard from "./AddUserToAppWizard";
-import RoleAssignmentDropdown from "./RoleAssignmentDropdown";
 import styles from "./AppMembersSection.module.css";
 
 const LIMIT = 20;
@@ -131,68 +130,33 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
         }
     }
 
-    async function handleRowSelectRole(row: AppUserWithRoles, roleId: string) {
-        const alreadyAssigned = row.roles.some((role) => role.role_id === roleId);
-        if (alreadyAssigned) {
-            if (app.role_cardinality === "single") return;
-            await handleRowUnassignRole(row, roleId);
-            return;
-        }
-
-        if (app.role_cardinality === "single" && row.roles.length > 0) {
-            setBusy(true);
-            setBanner(null);
-            try {
-                await Promise.all(row.roles.map((role) => unassignAppRole(app.client_id, role.role_id, row.user_id)));
-                await assignAppRole(app.client_id, roleId, row.user_id);
-                reload();
-            } catch (err) {
-                setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo cambiar el rol." });
-            } finally {
-                setBusy(false);
-            }
-            return;
-        }
-
-        await handleRowAssignRole(row, roleId);
-    }
-
-    async function handleRowClearRoles(row: AppUserWithRoles) {
-        if (row.roles.length === 0) return;
-        setBusy(true);
-        setBanner(null);
-        try {
-            await Promise.all(row.roles.map((role) => unassignAppRole(app.client_id, role.role_id, row.user_id)));
-            reload();
-        } catch (err) {
-            setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo retirar el acceso." });
-        } finally {
-            setBusy(false);
-        }
-    }
-
     const roleOptions = roles.map((role) => ({ value: role.id, label: `${role.display_name} (${role.name})` }));
 
     return (
         <section className={styles.section}>
-            <h3>Personas con acceso</h3>
-            <p className={styles.hint}>Asigna un rol para habilitar esta aplicación a una persona.</p>
+            <h3>Acceso y roles</h3>
+            <p className={styles.hint}>
+                Un rol de esta aplicación es el permiso de acceso: habilita la tarjeta en Órbita, el inicio de sesión
+                por SSO y define qué puede hacer el usuario dentro de ella.
+            </p>
 
             {banner && <Banner variant={banner.variant} message={banner.message} onDismiss={() => setBanner(null)} />}
 
             <div className={styles.toolbar}>
-                <Button type="button" onClick={() => setWizardOpen(true)}>Asignar acceso</Button>
+                <Button type="button" onClick={() => setWizardOpen(true)}>Agregar usuario a esta app</Button>
             </div>
 
             {selected.size > 0 && (
                 <div className={styles.bulkBar}>
                     <span>{selected.size} seleccionados</span>
-                    <RoleDropdown
-                        ariaLabel="Rol para personas seleccionadas"
+                    <Select
+                        id="bulk-app-role"
+                        label=""
+                        aria-label="Rol"
                         placeholder="Rol…"
                         options={roleOptions}
                         value={bulkRoleId}
-                        onChange={setBulkRoleId}
+                        onChange={(event) => setBulkRoleId(event.target.value)}
                     />
                     <Button type="button" variant="ghost" disabled={busy || !bulkRoleId} onClick={handleBulkAssignRole}>Asignar rol</Button>
                     <Button type="button" variant="ghost" disabled={busy || !bulkRoleId} onClick={handleBulkUnassignRole}>Quitar rol</Button>
@@ -220,15 +184,15 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
                         key: "roles",
                         header: "Roles",
                         render: (row: AppUserWithRoles) => (
-                            <RoleAssignmentDropdown
-                                userName={row.full_name}
-                                roles={roles}
-                                assignedRoles={row.roles}
-                                singleRole={app.role_cardinality === "single"}
-                                disabled={busy}
-                                onSelect={(roleId) => void handleRowSelectRole(row, roleId)}
-                                onClear={() => void handleRowClearRoles(row)}
-                            />
+                            <div className={styles.roleChips}>
+                                {row.roles.map((role) => (
+                                    <span key={role.role_id} className={styles.roleChip}>
+                                        {role.role_name}
+                                        <button type="button" disabled={busy} onClick={() => handleRowUnassignRole(row, role.role_id)}>×</button>
+                                    </span>
+                                ))}
+                                <RowRoleAdder row={row} roles={roles} busy={busy} onAssign={handleRowAssignRole} />
+                            </div>
                         ),
                     },
                 ]}
@@ -238,13 +202,55 @@ function AppMembersSection({ app, roles }: AppMembersSectionProps) {
                 loadingMessage="Cargando usuarios…"
                 error={error}
                 emptyState={{ title: "Sin usuarios con acceso", description: "Asigna un rol para habilitar el acceso a esta aplicación." }}
-                className={styles.flatTable}
             />
 
             <Pagination limit={LIMIT} offset={offset} itemCount={rawRows.length} onPageChange={setOffset} />
 
             <AddUserToAppWizard app={app} roles={roles} open={wizardOpen} onClose={() => setWizardOpen(false)} onDone={reload} />
         </section>
+    );
+}
+
+interface RowRoleAdderProps {
+    row: AppUserWithRoles;
+    roles: AppRole[];
+    busy: boolean;
+    onAssign: (row: AppUserWithRoles, roleId: string) => void;
+}
+
+function RowRoleAdder({ row, roles, busy, onAssign }: RowRoleAdderProps) {
+    const [roleId, setRoleId] = useState("");
+    const heldRoleIds = new Set(row.roles.map((r) => r.role_id));
+    const availableRoles = roles.filter((role) => !heldRoleIds.has(role.id));
+
+    if (availableRoles.length === 0) {
+        return null;
+    }
+
+    return (
+        <div className={styles.roleRowActions}>
+            <select
+                aria-label={`Agregar rol para ${row.full_name}`}
+                value={roleId}
+                disabled={busy}
+                onChange={(event) => setRoleId(event.target.value)}
+            >
+                <option value="">+ Rol…</option>
+                {availableRoles.map((role) => (
+                    <option key={role.id} value={role.id}>{role.display_name} ({role.name})</option>
+                ))}
+            </select>
+            <button
+                type="button"
+                disabled={busy || !roleId}
+                onClick={() => {
+                    onAssign(row, roleId);
+                    setRoleId("");
+                }}
+            >
+                Agregar
+            </button>
+        </div>
     );
 }
 

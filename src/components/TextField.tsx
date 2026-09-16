@@ -4,15 +4,11 @@ import styles from "./TextField.module.css";
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
     rightSlot?: ReactNode;
-    hint?: string;
-    fieldClassName?: string;
 }
 
-function TextField({ label, id, rightSlot, hint, fieldClassName, className, "aria-describedby": ariaDescribedBy, ...props }: TextFieldProps) {
-    const hintId = hint && id ? `${id}-hint` : undefined;
-
+function TextField({ label, id, rightSlot, className, ...props }: TextFieldProps) {
     return (
-        <div className={[styles.field, fieldClassName].filter(Boolean).join(" ")}>
+        <div className={styles.field}>
             <label className={styles.label} htmlFor={id}>
                 {label}
             </label>
@@ -27,13 +23,11 @@ function TextField({ label, id, rightSlot, hint, fieldClassName, className, "ari
                     ]
                         .filter(Boolean)
                         .join(" ")}
-                    aria-describedby={hintId ?? ariaDescribedBy}
                     {...props}
                 />
 
                 {rightSlot && <div className={styles.rightSlot}>{rightSlot}</div>}
             </div>
-            {hint && <p id={hintId} className={styles.hint}>{hint}</p>}
         </div>
     );
 }

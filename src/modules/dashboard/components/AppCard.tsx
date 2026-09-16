@@ -31,7 +31,6 @@ function AppCard({ id, slug, title, description, icon, url }: AppCardProps) {
     return (
             <a href={url} className={[styles.card, isTeamLead ? styles.teamLead : "", isMatch ? styles.match : "", isTeamUp ? styles.teamUp : ""].join(" ")} onClick={handleOpen}>
             <div className={styles.details}>
-                <span className={styles.openLabel}>Abrir aplicación</span>
                 <h3 className={styles.title}>{title}</h3>
                 <p className={styles.description}>{description}</p>
             </div>

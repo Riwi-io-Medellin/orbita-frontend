@@ -33,19 +33,6 @@ export async function passwordLogin(email: string, password: string): Promise<vo
   }
 }
 
-export async function updateMyProfile(fullName: string): Promise<void> {
-  const response = await apiFetch("/auth/me", { method: "PATCH", body: JSON.stringify({ full_name: fullName }) });
-  if (!response.ok) throw new Error(await parseApiError(response, "No se pudo actualizar tu nombre."));
-}
-
-export async function changeMyPassword(currentPassword: string, newPassword: string): Promise<void> {
-  const response = await apiFetch("/auth/me/password", {
-    method: "POST",
-    body: JSON.stringify({ current_password: currentPassword, new_password: newPassword }),
-  });
-  if (!response.ok) throw new Error(await parseApiError(response, "No se pudo cambiar la contraseña."));
-}
-
 export interface AuthenticationProviders {
   moodle: boolean;
   microsoft: boolean;

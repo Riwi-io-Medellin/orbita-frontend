@@ -11,14 +11,8 @@ export interface AuditLog {
     created_at: string;
 }
 
-export interface AuditLogParams {
-    limit?: number;
-    offset?: number;
-}
-
-export async function getAuditLogs({ limit = 10, offset = 0 }: AuditLogParams = {}): Promise<AuditLog[]> {
-    const query = new URLSearchParams({ limit: String(limit), offset: String(offset) });
-    const response = await apiFetch(`/applications/audit?${query.toString()}`);
+export async function getAuditLogs(): Promise<AuditLog[]> {
+    const response = await apiFetch("/applications/audit");
     if (!response.ok) {
         throw new Error("No se pudo cargar la auditoría.");
     }

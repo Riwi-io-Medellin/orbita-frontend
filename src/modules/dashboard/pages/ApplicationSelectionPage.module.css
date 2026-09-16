@@ -9,7 +9,7 @@
     flex-wrap: wrap;
     align-items: end;
     justify-content: center;
-    gap: clamp(18px, 3vw, 38px);
+    gap: clamp(18px, 3vw, 42px);
 }
 
 .cardSlot {

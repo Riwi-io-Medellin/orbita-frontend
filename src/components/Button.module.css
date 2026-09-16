@@ -39,10 +39,8 @@
 .primary:not(:disabled):active { background: #746EC0; transform: translateY(0); }
 
 .ghost {
-    min-height: 40px;
-    border: 1px solid var(--color-border);
-    background: rgba(255, 255, 255, .58);
-    color: #514B9B;
+    background: transparent;
+    color: var(--color-primary);
     text-transform: none;
     font-weight: var(--font-weight-semibold);
     letter-spacing: normal;
@@ -50,6 +48,5 @@
 }
 
 .ghost:not(:disabled):hover {
-    border-color: #B9B4DD;
-    background: #F0EEFF;
+    background: var(--color-border);
 }

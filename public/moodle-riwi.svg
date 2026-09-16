@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" role="img" aria-label="Moodle Riwi">
-  <rect width="160" height="48" rx="10" fill="#f98012"/>
-  <path fill="#fff" d="M23 11 8 19l15 8 15-8-15-8Zm-10 18h20v9H13z"/>
-  <text x="48" y="30" fill="#fff" font-family="Arial,sans-serif" font-size="18" font-weight="700">Moodle</text>
-</svg>
