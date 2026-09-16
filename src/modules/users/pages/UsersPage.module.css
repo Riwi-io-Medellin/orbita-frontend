@@ -3,33 +3,6 @@
     color: #171A45;
 }
 
-.hero {
-    margin-bottom: 28px;
-}
-
-.eyebrow,
-.sectionLabel {
-    margin: 0 0 7px;
-    color: #665FAE;
-    font-size: .78rem;
-    font-weight: 800;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-}
-
-.hero h1 {
-    margin: 0;
-    font-size: clamp(2rem, 4vw, 3.1rem);
-    line-height: 1.1;
-}
-
-.hero p:last-child {
-    max-width: 700px;
-    margin: 12px 0 0;
-    color: #5F648D;
-    font-size: 1.02rem;
-}
-
 .notice {
     display: flex;
     align-items: center;
@@ -58,18 +31,26 @@
     display: grid;
     grid-template-columns: 330px minmax(0, 1fr);
     min-height: 570px;
-    overflow: hidden;
-    border: 1px solid rgba(109, 104, 186, .25);
-    border-radius: 22px;
-    background: rgba(248, 247, 253, .72);
-    box-shadow: 0 12px 32px rgba(65, 59, 128, .1);
-    backdrop-filter: blur(10px);
 }
 
+.headerRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.createForm { display: grid; gap: 18px; min-width: min(420px, 80vw); }
+.temporaryPassword { display: grid; gap: 18px; min-width: min(420px, 80vw); }
+.temporaryPassword p { margin: 0; color: #6e7195; line-height: 1.5; }
+.temporaryPassword dl { display: grid; gap: 12px; margin: 0; }
+.temporaryPassword dl div { display: grid; gap: 7px; }
+.temporaryPassword dt { color: #74779c; font-size: .8rem; font-weight: 700; }
+.temporaryPassword dd { margin: 0; color: #171a45; font-weight: 700; }
+.temporaryPassword code { padding: 10px 12px; border-radius: 10px; background: #f0eeff; color: #4f4b9b; font: 600 .95rem ui-monospace, SFMono-Regular, Consolas, monospace; }
+.credentialRow dd { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.copyButton { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid #d8d5ef; border-radius: 10px; background: #fff; color: #5a559c; font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; transition: background .18s ease, border-color .18s ease, color .18s ease; }
+.copyButton:hover { border-color: #958fdd; background: #f7f5ff; color: #433d8c; }
+.copyButton:focus-visible { outline: 3px solid rgba(112,99,220,.18); outline-offset: 2px; }
+@media (max-width: 480px) { .credentialRow dd { align-items: flex-start; flex-direction: column; gap: 9px; } }
+
 .userList {
-    padding: 18px;
-    border-right: 1px solid rgba(109, 104, 186, .18);
-    background: rgba(242, 241, 251, .65);
+    padding: 4px 24px 4px 0;
+    border-right: 1px solid rgba(109, 104, 186, .2);
 }
 
 .search {
@@ -122,8 +103,8 @@
 
 .userRow:hover,
 .selected {
-    background: #FFF;
-    box-shadow: 0 3px 13px rgba(54, 49, 111, .08);
+    background: rgba(255, 255, 255, .72);
+    box-shadow: none;
 }
 
 .userIdentity {
@@ -153,7 +134,7 @@
     border-radius: 50%;
     background: #DCD9F8;
     color: #514B9B;
-    font-weight: 800;
+    flex: 0 0 auto;
 }
 
 .avatar {
@@ -171,12 +152,19 @@
 .active { color: #228553; }
 .inactive { color: #9B7180; }
 
-.detail { padding: 32px; }
+.detail { padding: 4px 0 20px 38px; }
 
 .personHead {
     display: flex;
     align-items: center;
     gap: 14px;
+}
+
+.personActions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
 }
 
 .largeAvatar {
@@ -195,7 +183,6 @@
 
 .statusOn,
 .statusOff {
-    margin-left: auto;
     padding: 6px 10px;
     border-radius: 999px;
     font-size: .75rem;
@@ -205,21 +192,6 @@
 .statusOn { background: #E1F7E9; color: #207447; }
 .statusOff { background: #FBE9ED; color: #8B5968; }
 
-.actionBar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    margin: 25px 0;
-    padding: 20px 0;
-    border-top: 1px solid #E1DFF0;
-    border-bottom: 1px solid #E1DFF0;
-}
-
-.actionBar strong,
-.actionBar span { display: block; }
-
-.actionBar span,
 .hint {
     margin: 5px 0 0;
     color: #737797;
@@ -229,7 +201,10 @@
 .identityProviders {
     display: grid;
     gap: 13px;
-    margin-bottom: 25px;
+    margin: 24px 0;
+    padding: 18px 0;
+    border-top: 1px solid #E1DFF0;
+    border-bottom: 1px solid #E1DFF0;
 }
 
 .identityProviders h3 { margin: 0; }
@@ -247,9 +222,9 @@
     display: grid;
     gap: 4px;
     padding: 14px 15px;
-    border: 1px solid #E3E1F1;
-    border-radius: 15px;
-    background: #FFF;
+    border-left: 3px solid #DCD9F8;
+    border-radius: 0;
+    background: transparent;
 }
 
 .providerList strong { color: #514B9B; }
@@ -267,30 +242,21 @@
 
 .permissions {
     display: grid;
-    gap: 13px;
+    gap: 12px;
+    margin-top: 30px;
 }
 
-.globalRoles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 14px;
-    border: 1px solid #E3E1F1;
-    border-radius: 15px;
-    background: #FFF;
-}
-
-.appRolesHeader { margin-top: 14px; }
+.appRolesHeader { margin-top: 22px; padding-top: 22px; border-top: 1px solid #E1DFF0; }
 
 .appPermission {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
-    padding: 16px 17px;
-    border: 1px solid #E3E1F1;
-    border-radius: 15px;
-    background: #FFF;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid #E8E6F2;
+    border-radius: 0;
+    background: transparent;
 }
 
 .appPermission strong,
@@ -300,38 +266,6 @@
     margin-top: 4px;
     color: #767A9B;
     font-size: .74rem;
-}
-
-.roleChoices {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 7px;
-}
-
-.role {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 7px 10px;
-    border: 1px solid #D6D3E8;
-    border-radius: 999px;
-    background: #FFF;
-    color: #5D6287;
-    font: inherit;
-    font-size: .78rem;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-.role:not(:disabled):hover { border-color: #958FDD; }
-
-.role:disabled { cursor: not-allowed; opacity: .6; }
-
-.roleActive {
-    border-color: #958FDD;
-    background: #EEEDFB;
-    color: #514B9B;
 }
 
 .noRoles {
@@ -349,16 +283,13 @@
         overflow: auto;
     }
 
-    .detail { padding: 22px; }
+    .detail { padding: 28px 0 12px; }
 
     .appPermission,
-    .actionBar {
+    .personHead {
         align-items: flex-start;
         flex-direction: column;
     }
 
-    .roleChoices { justify-content: flex-start; }
-
-    .statusOn,
-    .statusOff { margin-left: 0; }
+    .personActions { width: 100%; margin-left: 0; justify-content: space-between; }
 }

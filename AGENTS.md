@@ -4,7 +4,7 @@
 
 Este repositorio es la interfaz web de Órbita, el punto de entrada único al ecosistema de aplicaciones de Riwi. Permite:
 
-- iniciar sesión con una cuenta local de Órbita o con Microsoft;
+- iniciar sesión con una cuenta local de Órbita, Moodle o Microsoft, según los proveedores habilitados por el backend;
 - continuar un handoff SSO iniciado por otra aplicación;
 - mostrar a cada persona únicamente las aplicaciones que tiene autorizadas;
 - registrar la apertura de aplicaciones para auditoría;
@@ -38,7 +38,7 @@ src/
 ├── styles/tokens.css        design tokens globales
 ├── types/                   contratos transversales
 └── modules/
-    ├── auth/                contexto, login local/Microsoft y callback
+    ├── auth/                contexto, login local/Moodle/Microsoft y callback
     ├── dashboard/           launcher, auditoría y configuración
     ├── apps/                registro SSO, roles y miembros
     ├── users/               administración de cuentas y permisos
@@ -58,6 +58,7 @@ No llamar `fetch` directamente desde páginas nuevas. Extender un service de la 
 ## Rutas y permisos
 
 - `/auth`: login local y botón de Microsoft. También recibe `continue=sso` y errores recuperables.
+- `/auth/moodle`: login y recuperación de contraseña delegados a Moodle, preservando `continue=sso`.
 - `/auth/callback`: aterrizaje del OAuth de Microsoft.
 - `/apps`: catálogo autorizado y destino normal después del login.
 - `/settings`: configuración de usuario/plataforma disponible según su implementación.
@@ -70,6 +71,7 @@ No llamar `fetch` directamente desde páginas nuevas. Extender un service de la 
 ## Flujo de autenticación
 
 - Todas las peticiones usan la cookie HTTP-only de Órbita mediante `credentials: "include"`.
+- `GET /auth/providers` determina qué opciones de Moodle, Microsoft y login local se muestran; no renderizar ni habilitar proveedores que el backend marque como no disponibles.
 - El frontend nunca lee, persiste ni transmite manualmente el JWT.
 - `AuthProvider` consulta `/auth/me`, conserva el perfil en memoria y limpia la sesión local ante un `401` de una ruta protegida.
 - El login por contraseña usa `POST /auth/login`, refresca el perfil y navega a `/apps` o reanuda SSO.
@@ -77,7 +79,7 @@ No llamar `fetch` directamente desde páginas nuevas. Extender un service de la 
 - Si se llegó desde una aplicación cliente, `continue=sso` termina en `/auth/resume` para que el backend devuelva el navegador a esa aplicación.
 - El logout es `POST /auth/logout`; después se limpia el contexto.
 
-Nunca introducir `localStorage` o `sessionStorage` para tokens. Nunca colocar secretos SSO en variables `VITE_*`: todo valor Vite es público en el bundle.
+Nunca introducir `localStorage` o `sessionStorage` para tokens. Nunca colocar secretos SSO en variables `VITE_*`: todo valor Vite es público en el bundle. No enviar contraseñas, identificadores de recuperación ni respuestas de autenticación a analytics, logs o trackers. Preferir assets de marca locales a imágenes remotas de páginas de login.
 
 ## Catálogo y modelo de permisos
 
@@ -115,11 +117,14 @@ Preferir variables CSS antes que repetir hexadecimales. Los valores locales exis
 
 - fondos orbitales y campos de estrellas desde `public/`, siempre como atmósfera y no como ruido que compita con el contenido;
 - superficies translúcidas con blur moderado, borde claro y sombra lavanda: glassmorphism suave;
+- el shell puede usar una superficie translúcida; dentro de una página, preferir contenido plano con separadores antes que tarjetas anidadas;
 - radios amplios (14–30 px) y navegación tipo pill;
 - jerarquía tipográfica limpia, mucho aire y textos cortos;
 - iconos Phosphor redondeados y gruesos (`weight="bold"`), con tamaño consistente;
 - animaciones breves y calmadas; respetar `prefers-reduced-motion`;
 - foco visible, contraste legible y controles con estados hover, active, disabled y loading.
+
+Las páginas de producto y administración usan `PageHeader`: título claro, una frase breve y, si existe, la acción principal. Evitar eyebrows decorativos, descripciones técnicas en la primera vista y bloques de configuración avanzada abiertos por defecto.
 
 El catálogo usa tarjetas compactas e iguales: base cuadrada de aproximadamente 170–190 px que crece verticalmente al hover/focus para revelar título y descripción. En dispositivos sin hover, la información debe estar visible. Conservar la coherencia entre todas las tarjetas; un logo especial puede cambiar el contenido visual, no las dimensiones o la interacción.
 
@@ -180,12 +185,23 @@ pnpm build
 
 Además, recorrer manualmente el flujo afectado:
 
-- login local y Microsoft si se tocó auth;
+- login local, Moodle y Microsoft si se tocó auth, incluyendo proveedores deshabilitados y `continue=sso`;
 - sesión expirada y respuestas `401`/`403`;
 - launcher con cero, una y varias aplicaciones;
 - navegación por teclado y viewport móvil;
 - estados loading/error/empty;
 - para administración, usuario activo/inactivo, rol global, rol SSO y aplicación deshabilitada.
+
+## Documentación viva obligatoria
+
+La documentación forma parte de la definición de terminado. Después de cualquier cambio de lógica, rutas, contrato consumido, estado visible, seguridad, configuración, dependencia o lenguaje visual, actualizar en el mismo cambio:
+
+- `README.md` y `.env.example` cuando cambien instalación o configuración;
+- este `AGENTS.md` y el `AGENTS.md` raíz cuando cambie el contexto estable o una regla;
+- los contratos del backend cuando cambie una petición, respuesta, código de estado o flujo SSO;
+- pruebas o, mientras no exista runner, el checklist manual verificable del flujo afectado.
+
+No cerrar una tarea con documentación o ejemplos conocidos como obsoletos. Si un documento no cambia, debe ser porque fue revisado y continúa siendo correcto.
 
 ## Regla de entrega
 
