@@ -24,7 +24,7 @@ function Pagination({ limit, offset, itemCount, onPageChange }: PaginationProps)
 
     return (
         <div className={styles.pagination}>
-            <span className={styles.summary}>{from}–{to}</span>
+            <span className={styles.summary}>Mostrando {from}–{to}</span>
 
             <div className={styles.controls}>
                 <Button

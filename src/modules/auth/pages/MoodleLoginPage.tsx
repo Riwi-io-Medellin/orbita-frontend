@@ -7,8 +7,8 @@ import { useAuth } from "../hooks/useAuth";
 import { moodleLogin, requestMoodlePasswordReset } from "../services/authService";
 import styles from "./MoodleLoginPage.module.css";
 
-const MOODLE_LOGO = "https://moodle.riwi.io/pluginfile.php/1/core_admin/logo/0x200/1786259230/Imagen1.png";
-const RIWI_MARK = "https://moodle.riwi.io/pluginfile.php/1/theme_academi/logo/1786259230/Imagen1%20%281%29.png";
+const MOODLE_LOGO = "/moodle-riwi.svg";
+const RIWI_MARK = "/orbita-logo-white.svg";
 
 type Language = "en" | "es";
 type ResetIdentifierType = "username" | "email";

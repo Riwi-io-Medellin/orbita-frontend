@@ -15,6 +15,7 @@ function UserMultiPicker({ id, label, selected, onChange, disabled = false }: Us
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<AdminUser[]>([]);
     const [searching, setSearching] = useState(false);
+    const [searchError, setSearchError] = useState<string | null>(null);
 
     useEffect(() => {
         if (query.trim().length < 2) {
@@ -23,9 +24,16 @@ function UserMultiPicker({ id, label, selected, onChange, disabled = false }: Us
 
         const timeout = setTimeout(() => {
             setSearching(true);
+            setSearchError(null);
             listUsers({ limit: 6, offset: 0, search: query.trim() })
-                .then(setResults)
-                .catch(() => setResults([]))
+                .then((users) => {
+                    setResults(users);
+                    setSearchError(null);
+                })
+                .catch(() => {
+                    setResults([]);
+                    setSearchError("No se pudo buscar usuarios. Intenta nuevamente.");
+                })
                 .finally(() => setSearching(false));
         }, 300);
 
@@ -60,6 +68,8 @@ function UserMultiPicker({ id, label, selected, onChange, disabled = false }: Us
                 <div className={styles.pickerResults}>
                     {searching ? (
                         <span className={styles.pickerHint}>Buscando…</span>
+                    ) : searchError ? (
+                        <span className={styles.pickerHint} role="alert">{searchError}</span>
                     ) : results.length === 0 ? (
                         <span className={styles.pickerHint}>Sin coincidencias.</span>
                     ) : (
