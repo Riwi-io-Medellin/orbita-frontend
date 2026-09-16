@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 0 18px calc(var(--card-size, 190px) + 30px);
     background: rgba(247, 246, 252, .72);
     backdrop-filter: blur(10px);
@@ -121,6 +121,13 @@
     color: var(--color-text);
     font-size: 1rem;
     font-weight: var(--font-weight-bold);
+}
+
+.openLabel {
+    margin-bottom: 12px;
+    color: var(--color-text-muted);
+    font-size: .73rem;
+    font-weight: var(--font-weight-semibold);
 }
 
 .description {
