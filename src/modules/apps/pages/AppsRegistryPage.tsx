@@ -144,7 +144,7 @@ function AppsRegistryPage() {
 
             <Pagination limit={LIMIT} offset={offset} itemCount={apps.length} onPageChange={setOffset} />
 
-            {selectedApp && <AppDetailPanel app={selectedApp} />}
+            {selectedApp && <AppDetailPanel key={selectedApp.client_id} app={selectedApp} />}
 
             <Modal open={createOpen} onClose={() => setCreateOpen(false)} title="Registrar aplicación SSO">
                 <form

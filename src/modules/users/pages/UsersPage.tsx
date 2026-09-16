@@ -269,18 +269,19 @@ function UsersPage() {
                                 <div>
                                     <p className={styles.sectionLabel}>Roles de Órbita</p>
                                     <h3>Acceso global</h3>
-                                    <p className={styles.hint}>Estos roles habilitan las aplicaciones de catálogo que los requieran.</p>
+                                    <p className={styles.hint}>`guest` no habilita aplicaciones. Los roles detectados en Moodle se sincronizan al iniciar sesión.</p>
                                 </div>
                                 <div className={styles.globalRoles}>
                                     {globalRoles.map((role) => {
                                         const assigned = assignedGlobalRoleIds.has(role.id);
+                                        const isGuest = role.name === "guest";
                                         return (
                                             <button
                                                 key={role.id}
                                                 type="button"
                                                 title={role.description ?? role.name}
                                                 className={[styles.role, assigned ? styles.roleActive : ""].join(" ")}
-                                                disabled={busy || permissionsLoading}
+                                                disabled={busy || permissionsLoading || isGuest}
                                                 aria-pressed={assigned}
                                                 onClick={() => toggleGlobalRole(role)}
                                             >

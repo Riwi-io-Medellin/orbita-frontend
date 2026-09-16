@@ -15,6 +15,7 @@ interface AppCardProps {
 function AppCard({ id, slug, title, description, icon, url }: AppCardProps) {
     const isTeamLead = slug === "teamlead";
     const isMatch = ["riwi-match", "match", "match-staging"].includes(slug);
+    const isTeamUp = slug === "teamup";
     async function handleOpen(event: MouseEvent<HTMLAnchorElement>) {
         if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
@@ -28,7 +29,7 @@ function AppCard({ id, slug, title, description, icon, url }: AppCardProps) {
     }
 
     return (
-            <a href={url} className={[styles.card, isTeamLead ? styles.teamLead : "", isMatch ? styles.match : ""].join(" ")} onClick={handleOpen}>
+            <a href={url} className={[styles.card, isTeamLead ? styles.teamLead : "", isMatch ? styles.match : "", isTeamUp ? styles.teamUp : ""].join(" ")} onClick={handleOpen}>
             <div className={styles.details}>
                 <h3 className={styles.title}>{title}</h3>
                 <p className={styles.description}>{description}</p>
@@ -36,7 +37,7 @@ function AppCard({ id, slug, title, description, icon, url }: AppCardProps) {
 
             <div className={styles.logoStage}>
                 <div className={[styles.icon, !icon ? styles.iconPlaceholder : ""].join(" ")}>
-                    {isTeamLead ? <img className={styles.teamLeadLogo} src="/teamlead-logo.svg" alt="Logo de TeamLead" /> : isMatch ? <img className={styles.matchLogo} src="/match-logo.svg" alt="Logo de Match" /> : <ApplicationIcon name={icon} size={148} />}
+                    {isTeamLead ? <img className={styles.teamLeadLogo} src="/teamlead-logo.svg" alt="Logo de TeamLead" /> : isMatch ? <img className={styles.matchLogo} src="/match-logo.svg" alt="Logo de Match" /> : isTeamUp ? <img className={styles.teamUpLogo} src="/teamup-logo.png" alt="Logo de TeamUp" /> : <ApplicationIcon name={icon} size={148} />}
                 </div>
             </div>
         </a>

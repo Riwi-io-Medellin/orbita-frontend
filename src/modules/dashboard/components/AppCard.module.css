@@ -106,6 +106,15 @@
     object-fit: contain;
 }
 
+.teamUp .logoStage {
+    background: #FFFFFF;
+}
+
+.teamUpLogo {
+    width: 92%;
+    height: 92%;
+    object-fit: contain;
+}
 .title {
     margin: 0 0 7px;
     color: var(--color-text);
