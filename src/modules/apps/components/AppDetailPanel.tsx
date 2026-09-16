@@ -5,9 +5,12 @@ import Table from "../../../components/Table";
 import TextField from "../../../components/TextField";
 import {
     addRedirectUri,
+    addPostLogoutUri,
     createAppRole,
     deleteAppRole,
     listAppRoles,
+    updateAppPolicy,
+    upsertGlobalRoleMapping,
     type App,
     type AppRole,
 } from "../services/appRegistryService";
@@ -36,6 +39,13 @@ function AppDetailPanel({ app }: AppDetailPanelProps) {
     const [busy, setBusy] = useState(false);
 
     const [redirectUriInput, setRedirectUriInput] = useState("");
+    const [postLogoutUriInput, setPostLogoutUriInput] = useState("");
+    const [policy, setPolicy] = useState({
+        role_cardinality: app.role_cardinality,
+        migration_access_enabled: app.migration_access_enabled,
+        jit_role_adoption_enabled: app.jit_role_adoption_enabled,
+        released_claims: app.released_claims,
+    });
     const [newRoleName, setNewRoleName] = useState("");
 
     function reloadRoles() {
@@ -89,6 +99,25 @@ function AppDetailPanel({ app }: AppDetailPanelProps) {
         }
     }
 
+    async function handleSavePolicy() {
+        setBusy(true);
+        setBanner(null);
+        try {
+            const updated = await updateAppPolicy(app.client_id, policy);
+            setPolicy({
+                role_cardinality: updated.role_cardinality,
+                migration_access_enabled: updated.migration_access_enabled,
+                jit_role_adoption_enabled: updated.jit_role_adoption_enabled,
+                released_claims: updated.released_claims,
+            });
+            setBanner({ variant: "success", message: "Política SSO actualizada." });
+        } catch (err) {
+            setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo actualizar la política." });
+        } finally {
+            setBusy(false);
+        }
+    }
+
     async function handleDeleteRole(role: AppRole) {
         setBusy(true);
         setBanner(null);
@@ -105,6 +134,23 @@ function AppDetailPanel({ app }: AppDetailPanelProps) {
     return (
         <div className={styles.panel}>
             {banner && <Banner variant={banner.variant} message={banner.message} onDismiss={() => setBanner(null)} />}
+
+            <section className={styles.section}>
+                <h3>Política de acceso y migración</h3>
+                <p className={styles.hint}>El canal JIT puede permanecer activo durante toda la migración y apagarse aquí sin redesplegar.</p>
+                <label><input type="checkbox" checked={policy.role_cardinality === "single"} onChange={(e) => setPolicy({ ...policy, role_cardinality: e.target.checked ? "single" : "multiple" })} /> Un solo rol por usuario</label><br />
+                <label><input type="checkbox" checked={policy.migration_access_enabled} onChange={(e) => setPolicy({ ...policy, migration_access_enabled: e.target.checked })} /> Acceso temporal para usuarios no guest</label><br />
+                <label><input type="checkbox" checked={policy.jit_role_adoption_enabled} onChange={(e) => setPolicy({ ...policy, jit_role_adoption_enabled: e.target.checked })} /> Permitir adopción JIT de roles locales</label><br />
+                <label><input type="checkbox" checked={policy.released_claims.includes("clan")} onChange={(e) => setPolicy({ ...policy, released_claims: e.target.checked ? ["clan"] : [] })} /> Entregar clan autorizado</label>
+                <div className={styles.inlineForm}><Button type="button" disabled={busy} onClick={handleSavePolicy}>Guardar política</Button></div>
+                <div className={styles.inlineForm}>
+                    <TextField id="post-logout-uri" label="URI posterior al logout" placeholder="http://localhost:5174/login" value={postLogoutUriInput} onChange={(e) => setPostLogoutUriInput(e.target.value)} />
+                    <Button type="button" disabled={busy || !postLogoutUriInput} onClick={async () => { try { await addPostLogoutUri(app.client_id, postLogoutUriInput); setPostLogoutUriInput(""); setBanner({ variant: "success", message: "URI de logout registrada." }); } catch (err) { setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo registrar." }); } }}>Agregar</Button>
+                </div>
+                <div className={styles.inlineForm}>
+                    <Button type="button" disabled={busy} onClick={async () => { try { await upsertGlobalRoleMapping(app.client_id, "coder", "coder"); setBanner({ variant: "success", message: "Mapeo coder → coder guardado." }); } catch (err) { setBanner({ variant: "error", message: err instanceof Error ? err.message : "No se pudo guardar el mapeo." }); } }}>Configurar coder → coder</Button>
+                </div>
+            </section>
 
             <section className={styles.section}>
                 <h3>Redirect URIs</h3>
