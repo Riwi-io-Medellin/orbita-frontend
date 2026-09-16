@@ -1,4 +1,4 @@
-.page { max-width: 860px; }
+.page { display: flex; flex-direction: column; height: 100%; min-height: 0; max-width: 860px; }
 
 .account {
     display: grid;
@@ -45,8 +45,9 @@
 .accessDetails dd { margin: 0; color: var(--color-text); font-size: .94rem; font-weight: 700; text-align: right; }
 .active { color: var(--color-success); }
 
-.settingsLayout { display: grid; grid-template-columns: 190px minmax(0, 1fr); align-items: start; gap: 28px; margin-top: var(--space-7); }
-.forms { display: grid; gap: var(--space-5); min-width: 0; }
+.settingsLayout { display: grid; flex: 1 1 auto; grid-template-columns: 190px minmax(0, 1fr); min-height: 0; align-items: start; gap: 28px; margin-top: var(--space-6); }
+.forms { display: grid; min-width: 0; min-height: 0; align-content: start; overflow-y: auto; scrollbar-width: none; }
+.forms::-webkit-scrollbar { display: none; }
 .card { display: grid; align-content: start; gap: var(--space-5); padding: 30px 32px; border: 1px solid rgba(115, 108, 190, .2); border-radius: 18px; background: rgba(255,255,255,.68); box-shadow: 0 10px 28px rgba(70, 64, 135, .045); }
 .card h2 { margin: 0; font-size: 1.05rem; }
 .card p { margin: var(--space-1) 0 0; color: var(--color-text-muted); font-size: var(--font-size-sm); line-height: 1.5; }

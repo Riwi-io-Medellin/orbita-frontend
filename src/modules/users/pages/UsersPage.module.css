@@ -1,4 +1,8 @@
 .page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
     max-width: 1180px;
     color: #171A45;
 }
@@ -30,7 +34,8 @@
 .workspace {
     display: grid;
     grid-template-columns: 330px minmax(0, 1fr);
-    min-height: 570px;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .headerRow { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
@@ -49,6 +54,9 @@
 @media (max-width: 480px) { .credentialRow dd { align-items: flex-start; flex-direction: column; gap: 9px; } }
 
 .userList {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
     padding: 4px 24px 4px 0;
     border-right: 1px solid rgba(109, 104, 186, .2);
 }
@@ -82,9 +90,21 @@
 }
 
 .users {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: 6px;
     display: grid;
     gap: 5px;
 }
+
+.users,
+.detail {
+    scrollbar-width: none;
+}
+
+.users::-webkit-scrollbar,
+.detail::-webkit-scrollbar { display: none; }
 
 .userRow {
     display: grid;
@@ -152,7 +172,7 @@
 .active { color: #228553; }
 .inactive { color: #9B7180; }
 
-.detail { padding: 4px 0 20px 38px; }
+.detail { min-height: 0; overflow-y: auto; padding: 4px 12px 20px 38px; }
 
 .personHead {
     display: flex;
@@ -278,12 +298,9 @@
 
     .userList { border-right: 0; border-bottom: 1px solid rgba(109, 104, 186, .18); }
 
-    .users {
-        max-height: 260px;
-        overflow: auto;
-    }
+    .users { max-height: none; }
 
-    .detail { padding: 28px 0 12px; }
+    .detail { padding: 28px 8px 12px 0; }
 
     .appPermission,
     .personHead {
