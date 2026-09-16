@@ -1,0 +1,11 @@
+.root { position: relative; width: min(100%, 310px); }
+.trigger { display: flex; align-items: center; justify-content: space-between; gap: 14px; width: 100%; min-height: 46px; padding: 10px 14px; border: 1px solid #D6D3E8; border-radius: 14px; background: rgba(255, 255, 255, .9); color: #4F4B84; font: inherit; font-size: .9rem; font-weight: 700; text-align: left; cursor: pointer; transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease; }
+.trigger:hover, .triggerOpen { border-color: #958FDD; background: #FFF; }
+.triggerOpen { box-shadow: 0 0 0 3px rgba(112, 99, 220, .14); }
+.trigger:focus-visible, .option:focus-visible { outline: 3px solid rgba(112, 99, 220, .25); outline-offset: 2px; }
+.trigger:disabled { cursor: not-allowed; opacity: .6; }
+.placeholder { color: #69668F; }.selectedText { color: #272459; }
+.trigger svg { flex: 0 0 auto; color: #5B559E; transition: transform 140ms ease; }.caretOpen { transform: rotate(180deg); }
+.menu { position: absolute; top: calc(100% + 8px); right: 0; left: 0; z-index: 30; display: grid; gap: 3px; max-height: 230px; padding: 6px; overflow: auto; border: 1px solid rgba(149, 143, 221, .5); border-radius: 15px; background: #FFF; box-shadow: 0 18px 34px rgba(65, 59, 128, .2); }
+.option { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 40px; padding: 9px 10px; border: 0; border-radius: 10px; background: transparent; color: #5B5986; font: inherit; font-size: .88rem; text-align: left; cursor: pointer; }.option:hover, .optionSelected { background: #F0EEFF; color: #4F4B9B; }.optionSelected { font-weight: 700; }
+@media (max-width: 760px) { .root { width: 100%; } }

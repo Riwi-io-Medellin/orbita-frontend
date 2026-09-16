@@ -8,9 +8,10 @@ interface ModalProps {
     onClose: () => void;
     title: string;
     children: ReactNode;
+    dialogClassName?: string;
 }
 
-function Modal({ open, onClose, title, children }: ModalProps) {
+function Modal({ open, onClose, title, children, dialogClassName }: ModalProps) {
     const dialogRef = useRef<HTMLDivElement>(null);
 
     // Only steal focus when the dialog transitions to open — not on every
@@ -49,7 +50,7 @@ function Modal({ open, onClose, title, children }: ModalProps) {
         >
             <div
                 ref={dialogRef}
-                className={styles.dialog}
+                className={[styles.dialog, dialogClassName].filter(Boolean).join(" ")}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="modal-title"

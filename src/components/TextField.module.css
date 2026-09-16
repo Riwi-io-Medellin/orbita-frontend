@@ -10,6 +10,13 @@
     color: #30345F;
 }
 
+.hint {
+    margin: 0;
+    color: #686d94;
+    font-size: var(--font-size-xs);
+    line-height: 1.4;
+}
+
 .inputWrapper {
     position: relative;
     display: flex;
