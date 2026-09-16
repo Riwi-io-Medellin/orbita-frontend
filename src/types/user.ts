@@ -7,4 +7,5 @@ export interface User {
     active: boolean;
     must_change_password: boolean;
     is_local_account: boolean;
+    auth_method: "local" | "moodle" | "microsoft" | null;
 }
