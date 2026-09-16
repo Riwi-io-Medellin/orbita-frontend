@@ -6,6 +6,10 @@ export interface App {
     client_id: string;
     name: string;
     is_active: boolean;
+    role_cardinality: "single" | "multiple";
+    migration_access_enabled: boolean;
+    jit_role_adoption_enabled: boolean;
+    released_claims: string[];
 }
 
 // Only returned once, by createApp — the backend stores just a hash of it
@@ -21,6 +25,10 @@ export interface CreateAppPayload {
     description: string;
     url: string;
     icon?: string | null;
+    role_cardinality?: "single" | "multiple";
+    migration_access_enabled?: boolean;
+    jit_role_adoption_enabled?: boolean;
+    released_claims?: string[];
 }
 
 export interface RedirectUri {
@@ -93,6 +101,31 @@ export async function addRedirectUri(clientId: string, redirectUri: string): Pro
         throw new Error(await parseApiError(response, "No se pudo registrar el redirect URI."));
     }
     return response.json();
+}
+
+export async function addPostLogoutUri(clientId: string, postLogoutUri: string): Promise<void> {
+    const response = await apiFetch(`/apps/${encodeClientId(clientId)}/post-logout-uris`, {
+        method: "POST",
+        body: JSON.stringify({ post_logout_uri: postLogoutUri }),
+    });
+    if (!response.ok) throw new Error(await parseApiError(response, "No se pudo registrar la URI de logout."));
+}
+
+export async function updateAppPolicy(clientId: string, policy: Pick<App, "role_cardinality" | "migration_access_enabled" | "jit_role_adoption_enabled" | "released_claims">): Promise<App> {
+    const response = await apiFetch(`/apps/${encodeClientId(clientId)}/policy`, {
+        method: "PUT",
+        body: JSON.stringify(policy),
+    });
+    if (!response.ok) throw new Error(await parseApiError(response, "No se pudo actualizar la política SSO."));
+    return response.json();
+}
+
+export async function upsertGlobalRoleMapping(clientId: string, globalRole: string, appRole: string): Promise<void> {
+    const response = await apiFetch(`/apps/${encodeClientId(clientId)}/global-role-mapping`, {
+        method: "PUT",
+        body: JSON.stringify({ global_role: globalRole, app_role: appRole }),
+    });
+    if (!response.ok) throw new Error(await parseApiError(response, "No se pudo guardar el mapeo de rol."));
 }
 
 export async function listAppRoles(clientId: string): Promise<AppRole[]> {
